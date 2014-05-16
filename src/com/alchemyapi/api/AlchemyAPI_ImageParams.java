@@ -9,7 +9,6 @@ import java.io.UnsupportedEncodingException;
 		public static final String XPATH = "xpath";
 		public static final String RAW = "raw";
 		public static final String NOT_RAW = "not-raw";
-//imagePostMode=not-raw
 		private String cQuery;
 		private String xPath;
 		private Integer maxRetrieve;
@@ -60,10 +59,8 @@ import java.io.UnsupportedEncodingException;
 				if(cQuery!=null) retString+="&cquery="+URLEncoder.encode(cQuery,"UTF-8");
 				if(xPath!=null) retString+="&xpath="+URLEncoder.encode(xPath,"UTF-8");
 				if(maxRetrieve!=null) retString+="&maxRetrieve="+maxRetrieve.toString();
-				// if(image!=null) retString+="&image="+URLEncoder.encode(image,"UTF-8");
 				if(imagePostMode!=null) retString+="&imagePostMode="+URLEncoder.encode(imagePostMode,"UTF-8");
 				if(baseUrl!=null) retString+="&baseUrl="+URLEncoder.encode(baseUrl,"UTF-8");
-				// if(image!=null) retString+=image;
 			}
 			catch(UnsupportedEncodingException e ){
 				retString = "";
