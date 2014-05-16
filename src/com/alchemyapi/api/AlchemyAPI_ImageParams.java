@@ -7,10 +7,14 @@ import java.io.UnsupportedEncodingException;
 	public class AlchemyAPI_ImageParams extends AlchemyAPI_Params{
 		public static final String CQUERY = "cquery";
 		public static final String XPATH = "xpath";
-
+		public static final String RAW = "raw";
+		public static final String NOT_RAW = "not-raw";
+//imagePostMode=not-raw
 		private String cQuery;
 		private String xPath;
 		private Integer maxRetrieve;
+		private byte[] image;
+		private String imagePostMode;
 		private String baseUrl;
 
 		public String getCQuery() {
@@ -31,6 +35,18 @@ import java.io.UnsupportedEncodingException;
 		public void setMaxRetrieve(int maxRetrieve) {
 			this.maxRetrieve = maxRetrieve;
 		}
+		public byte[] getImage() {
+			return image;
+		}
+		public void setImage(byte[] image) {
+			this.image = image;
+		}
+		public String getImagePostMode() {
+			return imagePostMode;
+		}
+		public void setImagePostMode(String imagePostMode) {
+			this.imagePostMode = imagePostMode;
+		}
 		public String getBaseUrl() {
 			return baseUrl;
 		}
@@ -44,7 +60,10 @@ import java.io.UnsupportedEncodingException;
 				if(cQuery!=null) retString+="&cquery="+URLEncoder.encode(cQuery,"UTF-8");
 				if(xPath!=null) retString+="&xpath="+URLEncoder.encode(xPath,"UTF-8");
 				if(maxRetrieve!=null) retString+="&maxRetrieve="+maxRetrieve.toString();
+				// if(image!=null) retString+="&image="+URLEncoder.encode(image,"UTF-8");
+				if(imagePostMode!=null) retString+="&imagePostMode="+URLEncoder.encode(imagePostMode,"UTF-8");
 				if(baseUrl!=null) retString+="&baseUrl="+URLEncoder.encode(baseUrl,"UTF-8");
+				// if(image!=null) retString+=image;
 			}
 			catch(UnsupportedEncodingException e ){
 				retString = "";

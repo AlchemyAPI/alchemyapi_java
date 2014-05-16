@@ -920,6 +920,44 @@ public class AlchemyAPI {
 	    return GET("URLGetImage", "url", params);
 	}
 
+    public Document URLGetRankedImageKeywords(String url) throws IOException, SAXException,
+               ParserConfigurationException, XPathExpressionException
+    {
+        return URLGetRankedImageKeywords(url, new AlchemyAPI_ImageParams());
+    }
+    
+    public Document URLGetRankedImageKeywords(String url, AlchemyAPI_ImageParams params)
+    throws IOException, SAXException,
+           ParserConfigurationException, XPathExpressionException
+    {
+        CheckURL(url);
+
+        params.setUrl(url);
+    
+        return GET("URLGetRankedImageKeywords", "url", params);
+    }
+
+    public Document ImageGetRankedImageKeywords(AlchemyAPI_ImageParams params)
+    throws IOException, SAXException,
+           ParserConfigurationException, XPathExpressionException
+    {
+        URL url = new URL(_requestUri + "image/ImageGetRankedImageKeywords?" + 
+            "apikey=" + this._apiKey + params.getParameterString());
+        System.out.println(url.toString());
+
+        HttpURLConnection handle = (HttpURLConnection) url.openConnection();
+        handle.setDoOutput(true);
+
+        byte[] image = params.getImage();
+        handle.addRequestProperty("Content-Length", Integer.toString(image.length));
+
+        DataOutputStream ostream = new DataOutputStream(handle.getOutputStream());
+        ostream.write(image);
+        ostream.close();
+
+        return doRequest(handle, params.getOutputMode());
+    }
+
     private void CheckHTML(String html, String url) {
         if (null == html || html.length() < 5)
             throw new IllegalArgumentException("Enter a HTML document to analyze.");

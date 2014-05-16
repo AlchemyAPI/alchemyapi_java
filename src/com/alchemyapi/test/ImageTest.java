@@ -12,6 +12,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.net.URLEncoder;
 
 class ImageTest {
     public static void main(String[] args)
@@ -24,29 +25,37 @@ class ImageTest {
         // Extract image for a web URL.
         Document doc = alchemyObj.URLGetImage("http://www.techcrunch.com/");
         System.out.println(getStringFromDocument(doc));
+
+        doc = alchemyObj.URLGetRankedImageKeywords(
+            "http://farm4.staticflickr.com/3726/11043305726_fdcb7785ec_m.jpg");
+        System.out.println(getStringFromDocument(doc));
+
+        byte[] imageByteArray = readFile("data/cat.jpg");
+
+        AlchemyAPI_ImageParams imageParams = new AlchemyAPI_ImageParams();
+        imageParams.setImage(imageByteArray);
+        imageParams.setImagePostMode(AlchemyAPI_ImageParams.RAW);
+        doc = alchemyObj.ImageGetRankedImageKeywords(imageParams);
+        System.out.println(getStringFromDocument(doc));
     }
 
     // utility function
-    private static String getFileContents(String filename)
-        throws IOException, FileNotFoundException
-    {
-        File file = new File(filename);
-        StringBuilder contents = new StringBuilder();
-
-        BufferedReader input = new BufferedReader(new FileReader(file));
-
+    private static byte[] readFile(String file) throws IOException {
+        // Open file
+        RandomAccessFile f = new RandomAccessFile(new File(file), "r");
         try {
-            String line = null;
-
-            while ((line = input.readLine()) != null) {
-                contents.append(line);
-                contents.append(System.getProperty("line.separator"));
-            }
+            // Get and check length
+            long longlength = f.length();
+            int length = (int) longlength;
+            if (length != longlength)
+                throw new IOException("File size >= 2 GB");
+            // Read file and return data
+            byte[] data = new byte[length];
+            f.readFully(data);
+            return data;
         } finally {
-            input.close();
+            f.close();
         }
-
-        return contents.toString();
     }
 
     // utility method
