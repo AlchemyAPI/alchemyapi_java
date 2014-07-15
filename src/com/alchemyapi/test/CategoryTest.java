@@ -22,24 +22,24 @@ class CategoryTest {
         AlchemyAPI alchemyObj = AlchemyAPI.GetInstanceFromFile("api_key.txt");
 
         // Categorize a web URL by topic.
-        Document doc = alchemyObj.URLGetCategory("http://www.techcrunch.com/");
-        System.out.println(getStringFromDocument(doc));
+        String doc = alchemyObj.URLGetCategory("http://www.techcrunch.com/");
+        System.out.println(doc);
 
         // Categorize some text.
         doc = alchemyObj.TextGetCategory("Latest on the War in Iraq.");
-        System.out.println(getStringFromDocument(doc));
+        System.out.println(doc);
 
         // Load a HTML document to analyze.
         String htmlDoc = getFileContents("data/example.html");
 
         // Categorize a HTML document by topic.
         doc = alchemyObj.HTMLGetCategory(htmlDoc, "http://www.test.com/");
-        System.out.println(getStringFromDocument(doc));
+        System.out.println(doc);
         
         AlchemyAPI_CategoryParams categoryParams = new AlchemyAPI_CategoryParams();
         categoryParams.setOutputMode(AlchemyAPI_Params.OUTPUT_RDF);
         doc = alchemyObj.HTMLGetCategory(htmlDoc, "http://www.test.com/", categoryParams);
-        System.out.println(getStringFromDocument(doc));
+        System.out.println(doc);
     }
 
     // utility function

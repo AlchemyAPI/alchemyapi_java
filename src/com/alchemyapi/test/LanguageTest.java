@@ -22,21 +22,21 @@ class LanguageTest {
         AlchemyAPI alchemyObj = AlchemyAPI.GetInstanceFromFile("api_key.txt");
 
         // Detect the language for a web URL.
-        Document doc = alchemyObj.URLGetLanguage("http://news.google.fr/");
-        System.out.println(getStringFromDocument(doc));
+        String doc = alchemyObj.URLGetLanguage("http://news.google.fr/");
+        System.out.println(doc);
 
         // Detect the language for a text string (requires at least 100
         // characters).
         String htmlDoc = getFileContents("data/example.html");
         doc = alchemyObj.TextGetLanguage("This is some english language text.  What language do you speak?");
-        System.out.println(getStringFromDocument(doc));
+        System.out.println(doc);
 
         // Load a HTML document to analyze.
         htmlDoc = getFileContents("data/example.html");
 
         // Detect the language for a HTML document.
         doc = alchemyObj.HTMLGetLanguage(htmlDoc, "http://www.test.com/");
-        System.out.println(getStringFromDocument(doc));
+        System.out.println(doc);
     }
 
     // utility function

@@ -27,11 +27,11 @@ public class AuthorTest {
 		// Load a HTML document to analyze.
 		String htmlDoc = getFileContents("data/example.html");
 	        
-		Document doc = alchemyObj.URLGetAuthor("http://www.politico.com/blogs/media/2012/02/detroit-news-ed-upset-over-romney-edit-115247.html");
-		System.out.println(getStringFromDocument(doc));
+		String doc = alchemyObj.URLGetAuthor("http://www.politico.com/blogs/media/2012/02/detroit-news-ed-upset-over-romney-edit-115247.html");
+		System.out.println(doc);
 	        
 		doc = alchemyObj.HTMLGetAuthor(htmlDoc, "http://www.test.com/");
-		System.out.println(getStringFromDocument(doc));
+		System.out.println(doc);
 	}
 	
 	 // utility function

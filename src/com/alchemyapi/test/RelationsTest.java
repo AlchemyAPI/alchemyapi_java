@@ -22,21 +22,21 @@ class RelationsTest {
         AlchemyAPI alchemyObj = AlchemyAPI.GetInstanceFromFile("api_key.txt");
 
         // Extract a ranked list of relations for a web URL.
-        Document doc = alchemyObj.URLGetRelations("http://www.techcrunch.com/");
-        System.out.println(getStringFromDocument(doc));
+        String doc = alchemyObj.URLGetRelations("http://www.techcrunch.com/");
+        System.out.println(doc);
 
         // Extract a ranked list of relations from a text string.
         doc = alchemyObj.TextGetRelations(
             "Hello there, my name is Bob Jones.  I live in the United States of America.  " +
             "Where do you live, Fred?");
-        System.out.println(getStringFromDocument(doc));
+        System.out.println(doc);
 
         // Load a HTML document to analyze.
         String htmlDoc = getFileContents("data/example.html");
 
         // Extract a ranked list of relations from a HTML document.
         doc = alchemyObj.HTMLGetRelations(htmlDoc, "http://www.test.com/");
-        System.out.println(getStringFromDocument(doc));
+        System.out.println(doc);
 		
 		AlchemyAPI_RelationParams relationParams = new AlchemyAPI_RelationParams();
 		relationParams.setSentiment(true);
@@ -44,13 +44,13 @@ class RelationsTest {
 		relationParams.setDisambiguate(true);
 		relationParams.setSentimentExcludeEntities(true);
 		doc = alchemyObj.TextGetRelations("Madonna enjoys tasty Pepsi.  I love her style.", relationParams);
-        System.out.println(getStringFromDocument(doc));
+        System.out.println(doc);
 		
 		relationParams.setSentiment(true);
 		relationParams.setRequireEntities(true);
 		relationParams.setSentimentExcludeEntities(true);
 		doc = alchemyObj.TextGetRelations("Madonna enjoys tasty Pepsi.  I love her style.", relationParams);
-        System.out.println(getStringFromDocument(doc));
+        System.out.println(doc);
     }
 
     // utility function

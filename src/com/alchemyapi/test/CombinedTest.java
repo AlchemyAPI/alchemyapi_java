@@ -22,14 +22,14 @@ class CombinedTest {
         AlchemyAPI alchemyObj = AlchemyAPI.GetInstanceFromFile("api_key.txt");
 
         // Extract combined data for a web URL.
-        Document doc = alchemyObj.URLGetCombined("http://www.techcrunch.com/");
-        System.out.println(getStringFromDocument(doc));
+        String doc = alchemyObj.URLGetCombined("http://www.techcrunch.com/");
+        System.out.println(doc);
 
         // Extract combined data from a text string.
         doc = alchemyObj.TextGetCombined(
             "Hello there, my name is Bob Jones.  I live in the United States of America.  " +
             "Where do you live, Fred?");
-        System.out.println(getStringFromDocument(doc));
+        System.out.println(doc);
 
 	// Only extract entities & keywords
 	AlchemyAPI_CombinedParams combinedParams = new AlchemyAPI_CombinedParams();
@@ -37,7 +37,7 @@ class CombinedTest {
 	combinedParams.setExtract("entity");
 	combinedParams.setExtract("keyword");
 	doc = alchemyObj.TextGetCombined("Madonna enjoys tasty Pepsi.  I love her style.", combinedParams);
-        System.out.println(getStringFromDocument(doc));
+        System.out.println(doc);
     }
 
     // utility function

@@ -8,6 +8,7 @@ import java.net.URLEncoder;
 public class AlchemyAPI_Params {
 	public static final String OUTPUT_XML = "xml";
 	public static final String OUTPUT_RDF = "rdf";
+	public static final String OUTPUT_JSON = "json";
 	
 	private String url;
 	private String html;
@@ -37,7 +38,7 @@ public class AlchemyAPI_Params {
 		return outputMode;
 	}
 	public void setOutputMode(String outputMode) {
-		if( !outputMode.equals(AlchemyAPI_Params.OUTPUT_XML) && !outputMode.equals(OUTPUT_RDF) ) 
+		if( !outputMode.equals(AlchemyAPI_Params.OUTPUT_XML) && !outputMode.equals(AlchemyAPI_Params.OUTPUT_RDF) && !outputMode.equals(AlchemyAPI_Params.OUTPUT_JSON)) 
 		{
 			throw new RuntimeException("Invalid setting " + outputMode + " for parameter outputMode");
 		}

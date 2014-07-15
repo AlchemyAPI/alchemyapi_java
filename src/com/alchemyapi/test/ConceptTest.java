@@ -20,20 +20,20 @@ class ConceptTest {
         AlchemyAPI alchemyObj = AlchemyAPI.GetInstanceFromFile("api_key.txt");
 
         // Extract concept tags for a web URL.
-        Document doc = alchemyObj.URLGetRankedConcepts("http://www.techcrunch.com/");
-        System.out.println(getStringFromDocument(doc));
+        String doc = alchemyObj.URLGetRankedConcepts("http://www.techcrunch.com/");
+        System.out.println(doc);
 
         // Extract concept tags for a text string.
         doc = alchemyObj.TextGetRankedConcepts(
             "This thing has a steering wheel, tires, and an engine.  Do you know what it is?");
-        System.out.println(getStringFromDocument(doc));
+        System.out.println(doc);
 
         // Load a HTML document to analyze.
         String htmlDoc = getFileContents("data/example.html");
 
         // Extract concept tags for a HTML document.
         doc = alchemyObj.HTMLGetRankedConcepts(htmlDoc, "http://www.test.com/");
-        System.out.println(getStringFromDocument(doc));
+        System.out.println(doc);
     }
 
     // utility function
