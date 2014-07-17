@@ -16,8 +16,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.*;
 
-//import com.google.gson.*;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -978,21 +976,6 @@ public class AlchemyAPI {
             throw new IllegalArgumentException("Enter an URL to analyze.");
     }
     
-    /*private Document GET(String callName, String callPrefix, AlchemyAPI_Params params)
-    throws IOException, SAXException,
-           ParserConfigurationException, XPathExpressionException
-	{
-	    StringBuilder uri = new StringBuilder();
-	    uri.append(_requestUri).append(callPrefix).append('/').append(callName)
-	       .append('?').append("apikey=").append(this._apiKey);
-	    uri.append(params.getParameterString());
-	
-	    URL url = new URL(uri.toString());
-	    HttpURLConnection handle = (HttpURLConnection) url.openConnection();
-	    handle.setDoOutput(true);
-	
-	    return doRequest(handle, params.getOutputMode());
-	}*/
     private String GET(String callName, String callPrefix, AlchemyAPI_Params params)
     throws IOException, SAXException,
            ParserConfigurationException, XPathExpressionException
@@ -1031,29 +1014,6 @@ public class AlchemyAPI {
 
         return doRequest(handle, params.getOutputMode());
     }
-    /*private Document POST(String callName, String callPrefix, AlchemyAPI_Params params)
-        throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-        URL url = new URL(_requestUri + callPrefix + "/" + callName);
-
-        HttpURLConnection handle = (HttpURLConnection) url.openConnection();
-        handle.setDoOutput(true);
-
-        StringBuilder data = new StringBuilder();
-
-        data.append("apikey=").append(this._apiKey);
-        data.append(params.getParameterString());
-
-        handle.addRequestProperty("Content-Length", Integer.toString(data.length()));
-
-        DataOutputStream ostream = new DataOutputStream(handle.getOutputStream());
-        ostream.write(data.toString().getBytes());
-        ostream.close();
-
-        return doRequest(handle, params.getOutputMode());
-    }*/
-
 
     private String doRequest(HttpURLConnection handle, String outputMode)
         throws IOException, SAXException,
@@ -1071,68 +1031,4 @@ public class AlchemyAPI {
         return doc;
     }
 
-    /*
-
-    private Document doRequest(HttpURLConnection handle, String outputMode)
-        throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-        DataInputStream istream = new DataInputStream(handle.getInputStream());
-
-        
-
-        Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(istream);
-        
-        istream.close();
-        handle.disconnect();
-
-        XPathFactory factory = XPathFactory.newInstance();
-
-        if(AlchemyAPI_Params.OUTPUT_XML.equals(outputMode)) {
-        	String statusStr = getNodeValue(factory, doc, "/results/status/text()");
-        	if (null == statusStr || !statusStr.equals("OK")) {
-        		String statusInfoStr = getNodeValue(factory, doc, "/results/statusInfo/text()");
-        		if (null != statusInfoStr && statusInfoStr.length() > 0)
-        			throw new IOException("Error making API call: " + statusInfoStr + '.');
-
-        		throw new IOException("Error making API call: " + statusStr + '.');
-        	}
-        }
-        else if(AlchemyAPI_Params.OUTPUT_RDF.equals(outputMode)) {
-        	String statusStr = getNodeValue(factory, doc, "//RDF/Description/ResultStatus/text()");
-        	if (null == statusStr || !statusStr.equals("OK")) {
-        		String statusInfoStr = getNodeValue(factory, doc, "//RDF/Description/ResultStatus/text()");
-        		if (null != statusInfoStr && statusInfoStr.length() > 0)
-        			throw new IOException("Error making API call: " + statusInfoStr + '.');
-
-        		throw new IOException("Error making API call: " + statusStr + '.');
-        	}
-        }
-        else if(AlchemyAPI_Params.OUTPUT_JSON.equals(outputMode)) {
-            String statusStr = getNodeValue(factory, doc, "//JSON/Description/ResultStatus/text()");
-            if (null == statusStr || !statusStr.equals("OK")) {
-                String statusInfoStr = getNodeValue(factory, doc, "//JSON/Description/ResultStatus/text()");
-                if (null != statusInfoStr && statusInfoStr.length() > 0)
-                    throw new IOException("Error making API call: " + statusInfoStr + '.');
-
-                throw new IOException("Error making API call: " + statusStr + '.');
-            }
-        }
-
-        return doc;
-    }
-
-    private String getNodeValue(XPathFactory factory, Document doc, String xpathStr)
-        throws XPathExpressionException
-    {
-        XPath xpath = factory.newXPath();
-        XPathExpression expr = xpath.compile(xpathStr);
-        Object result = expr.evaluate(doc, XPathConstants.NODESET);
-        NodeList results = (NodeList) result;
-
-        if (results.getLength() > 0 && null != results.item(0))
-            return results.item(0).getNodeValue();
-
-        return null;
-    }*/
 }
