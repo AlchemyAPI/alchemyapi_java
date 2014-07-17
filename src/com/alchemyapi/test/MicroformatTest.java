@@ -22,15 +22,15 @@ class MicroformatsTest {
         AlchemyAPI alchemyObj = AlchemyAPI.GetInstanceFromFile("api_key.txt");
 
         // Extract microformats data from a web URL.
-        Document doc = alchemyObj.URLGetMicroformats("http://microformats.org/wiki/hcard");
-        System.out.println(getStringFromDocument(doc));
+        String doc = alchemyObj.URLGetMicroformats("http://microformats.org/wiki/hcard");
+        System.out.println(doc);
 
         // Load a HTML document to analyze.
         String htmlDoc = getFileContents("data/microformats.html");
 
         // Extract microformats data from a HTML document.
         doc = alchemyObj.HTMLGetMicroformats(htmlDoc, "http://www.test.com/");
-        System.out.println(getStringFromDocument(doc));
+        System.out.println(doc);
     }
 
     // utility function

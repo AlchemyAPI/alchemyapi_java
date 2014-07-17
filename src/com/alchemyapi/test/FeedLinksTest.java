@@ -22,15 +22,15 @@ class FeedLinksTest {
         AlchemyAPI alchemyObj = AlchemyAPI.GetInstanceFromFile("api_key.txt");
 
         // Extract RSS / ATOM feed links from a web URL.
-        Document doc = alchemyObj.URLGetFeedLinks("http://www.techcrunch.com/");
-        System.out.println(getStringFromDocument(doc));
+        String doc = alchemyObj.URLGetFeedLinks("http://www.techcrunch.com/");
+        System.out.println(doc);
 
         // Load a HTML document to analyze.
         String htmlDoc = getFileContents("data/example.html");
 
         // Extract RSS / ATOM feed links from a HTML document.
         doc = alchemyObj.HTMLGetFeedLinks(htmlDoc, "http://www.test.com/");
-        System.out.println(getStringFromDocument(doc));
+        System.out.println(doc);
     }
 
     // utility function

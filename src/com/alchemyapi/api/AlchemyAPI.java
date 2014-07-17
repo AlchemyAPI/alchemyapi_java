@@ -80,14 +80,14 @@ public class AlchemyAPI {
         _requestUri = "http://" + apiHost + ".alchemyapi.com/calls/";
     }
 
-    public Document URLGetAuthor(String url)
+    public String URLGetAuthor(String url)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
         return URLGetAuthor(url, new AlchemyAPI_Params());
     }
 
-    public Document URLGetAuthor(String url, AlchemyAPI_Params params)
+    public String URLGetAuthor(String url, AlchemyAPI_Params params)
         throws IOException, SAXException, ParserConfigurationException,
                XPathExpressionException
     {
@@ -98,14 +98,14 @@ public class AlchemyAPI {
         return GET("URLGetAuthor", "url", params);
     }
 
-    public Document HTMLGetAuthor(String html, String url)
+    public String HTMLGetAuthor(String html, String url)
         throws IOException, SAXException, ParserConfigurationException,
                XPathExpressionException
     {
         return HTMLGetAuthor(html, url, new AlchemyAPI_Params());
     }
 
-    public Document HTMLGetAuthor(String html, String url,
+    public String HTMLGetAuthor(String html, String url,
 			          AlchemyAPI_Params params)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
@@ -118,14 +118,14 @@ public class AlchemyAPI {
         return POST("HTMLGetAuthor", "html", params);
     }
 
-    public Document URLGetRankedNamedEntities(String url)
+    public String URLGetRankedNamedEntities(String url)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
         return URLGetRankedNamedEntities(url, new AlchemyAPI_NamedEntityParams());
     }
     
-    public Document URLGetRankedNamedEntities(String url, AlchemyAPI_NamedEntityParams params)
+    public String URLGetRankedNamedEntities(String url, AlchemyAPI_NamedEntityParams params)
     throws IOException, SAXException,
            ParserConfigurationException, XPathExpressionException
     {
@@ -136,7 +136,7 @@ public class AlchemyAPI {
     	return GET("URLGetRankedNamedEntities", "url", params);
     }
 
-    public Document HTMLGetRankedNamedEntities(String html, String url)
+    public String HTMLGetRankedNamedEntities(String html, String url)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
@@ -144,7 +144,7 @@ public class AlchemyAPI {
     }
     
 
-    public Document HTMLGetRankedNamedEntities(String html, String url, AlchemyAPI_NamedEntityParams params)
+    public String HTMLGetRankedNamedEntities(String html, String url, AlchemyAPI_NamedEntityParams params)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
@@ -156,14 +156,14 @@ public class AlchemyAPI {
         return POST("HTMLGetRankedNamedEntities", "html", params);
     }
 
-    public Document TextGetRankedNamedEntities(String text)
+    public String TextGetRankedNamedEntities(String text)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
         return TextGetRankedNamedEntities(text, new AlchemyAPI_NamedEntityParams());
     }
     
-    public Document TextGetRankedNamedEntities(String text, AlchemyAPI_NamedEntityParams params)
+    public String TextGetRankedNamedEntities(String text, AlchemyAPI_NamedEntityParams params)
     throws IOException, SAXException,
            ParserConfigurationException, XPathExpressionException
     {
@@ -176,14 +176,14 @@ public class AlchemyAPI {
     
     
 
-    public Document URLGetRankedConcepts(String url)
+    public String URLGetRankedConcepts(String url)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
         return URLGetRankedConcepts(url, new AlchemyAPI_ConceptParams());
     }
     
-    public Document URLGetRankedConcepts(String url, AlchemyAPI_ConceptParams params)
+    public String URLGetRankedConcepts(String url, AlchemyAPI_ConceptParams params)
     throws IOException, SAXException,
            ParserConfigurationException, XPathExpressionException
     {
@@ -195,14 +195,14 @@ public class AlchemyAPI {
     }    
     
 
-    public Document HTMLGetRankedConcepts(String html, String url)
+    public String HTMLGetRankedConcepts(String html, String url)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
         return HTMLGetRankedConcepts(html, url, new AlchemyAPI_ConceptParams());
     }
     
-    public Document HTMLGetRankedConcepts(String html, String url, AlchemyAPI_ConceptParams params)
+    public String HTMLGetRankedConcepts(String html, String url, AlchemyAPI_ConceptParams params)
     throws IOException, SAXException,
            ParserConfigurationException, XPathExpressionException
 	{
@@ -214,12 +214,12 @@ public class AlchemyAPI {
 	    return POST("HTMLGetRankedConcepts", "html", params);
 	}
 
-    public Document TextGetRankedConcepts(String text) throws IOException, SAXException,
+    public String TextGetRankedConcepts(String text) throws IOException, SAXException,
             ParserConfigurationException, XPathExpressionException {
         return TextGetRankedConcepts(text, new AlchemyAPI_ConceptParams());
     }
     
-    public Document TextGetRankedConcepts(String text, AlchemyAPI_ConceptParams params) throws IOException, SAXException,
+    public String TextGetRankedConcepts(String text, AlchemyAPI_ConceptParams params) throws IOException, SAXException,
     ParserConfigurationException, XPathExpressionException 
     {
 		CheckText(text);
@@ -231,14 +231,14 @@ public class AlchemyAPI {
     
     
 
-    public Document URLGetRankedKeywords(String url)
+    public String URLGetRankedKeywords(String url)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
         return URLGetRankedKeywords(url, new AlchemyAPI_KeywordParams());
     }
     
-    public Document URLGetRankedKeywords(String url, AlchemyAPI_KeywordParams params)
+    public String URLGetRankedKeywords(String url, AlchemyAPI_KeywordParams params)
     throws IOException, SAXException,
            ParserConfigurationException, XPathExpressionException
     {
@@ -250,14 +250,14 @@ public class AlchemyAPI {
     }    
     
 
-    public Document HTMLGetRankedKeywords(String html, String url)
+    public String HTMLGetRankedKeywords(String html, String url)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
         return HTMLGetRankedKeywords(html, url, new AlchemyAPI_KeywordParams());
     }
     
-    public Document HTMLGetRankedKeywords(String html, String url, AlchemyAPI_KeywordParams params)
+    public String HTMLGetRankedKeywords(String html, String url, AlchemyAPI_KeywordParams params)
     throws IOException, SAXException,
            ParserConfigurationException, XPathExpressionException
 	{
@@ -269,12 +269,12 @@ public class AlchemyAPI {
 	    return POST("HTMLGetRankedKeywords", "html", params);
 	}
 
-    public Document TextGetRankedKeywords(String text) throws IOException, SAXException,
+    public String TextGetRankedKeywords(String text) throws IOException, SAXException,
             ParserConfigurationException, XPathExpressionException {
         return TextGetRankedKeywords(text, new AlchemyAPI_KeywordParams());
     }
     
-    public Document TextGetRankedKeywords(String text, AlchemyAPI_KeywordParams params) throws IOException, SAXException,
+    public String TextGetRankedKeywords(String text, AlchemyAPI_KeywordParams params) throws IOException, SAXException,
     ParserConfigurationException, XPathExpressionException 
     {
 		CheckText(text);
@@ -284,14 +284,14 @@ public class AlchemyAPI {
 		return POST("TextGetRankedKeywords", "text", params);
 	}
 
-    public Document URLGetLanguage(String url)
+    public String URLGetLanguage(String url)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
         return URLGetLanguage(url, new AlchemyAPI_LanguageParams());
     }
     
-    public Document URLGetLanguage(String url, AlchemyAPI_LanguageParams params)
+    public String URLGetLanguage(String url, AlchemyAPI_LanguageParams params)
     throws IOException, SAXException,
            ParserConfigurationException, XPathExpressionException
 	{
@@ -302,14 +302,14 @@ public class AlchemyAPI {
 	    return GET("URLGetLanguage", "url", params);
 	}
 
-    public Document HTMLGetLanguage(String html, String url)
+    public String HTMLGetLanguage(String html, String url)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
         return HTMLGetLanguage(html, url, new AlchemyAPI_LanguageParams());
     }
     
-    public Document HTMLGetLanguage(String html, String url, AlchemyAPI_LanguageParams params)
+    public String HTMLGetLanguage(String html, String url, AlchemyAPI_LanguageParams params)
     throws IOException, SAXException,
            ParserConfigurationException, XPathExpressionException
 	{
@@ -321,14 +321,14 @@ public class AlchemyAPI {
 	    return POST("HTMLGetLanguage", "html", params);
 	}
 
-    public Document TextGetLanguage(String text)
+    public String TextGetLanguage(String text)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
         return TextGetLanguage(text, new AlchemyAPI_LanguageParams());
     }
     
-    public Document TextGetLanguage(String text, AlchemyAPI_LanguageParams params)
+    public String TextGetLanguage(String text, AlchemyAPI_LanguageParams params)
     throws IOException, SAXException,
            ParserConfigurationException, XPathExpressionException
 	{
@@ -339,14 +339,14 @@ public class AlchemyAPI {
 	    return POST("TextGetLanguage", "text", params);
 	}
 
-    public Document URLGetCategory(String url)
+    public String URLGetCategory(String url)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
         return URLGetCategory(url, new AlchemyAPI_CategoryParams());
     }
     
-    public Document URLGetCategory(String url, AlchemyAPI_CategoryParams params)
+    public String URLGetCategory(String url, AlchemyAPI_CategoryParams params)
     throws IOException, SAXException,
            ParserConfigurationException, XPathExpressionException
 	{
@@ -357,14 +357,14 @@ public class AlchemyAPI {
 	    return GET("URLGetCategory", "url", params);
 	}
 
-    public Document HTMLGetCategory(String html, String url)
+    public String HTMLGetCategory(String html, String url)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
         return HTMLGetCategory(html, url, new AlchemyAPI_CategoryParams());
     }
     
-    public Document HTMLGetCategory(String html, String url, AlchemyAPI_CategoryParams params)
+    public String HTMLGetCategory(String html, String url, AlchemyAPI_CategoryParams params)
     throws IOException, SAXException,
            ParserConfigurationException, XPathExpressionException
 	{
@@ -376,14 +376,14 @@ public class AlchemyAPI {
 	    return POST("HTMLGetCategory", "html", params);
 	}
 
-    public Document TextGetCategory(String text)
+    public String TextGetCategory(String text)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
         return TextGetCategory(text, new AlchemyAPI_TextParams());
     }
     
-    public Document TextGetCategory(String text, AlchemyAPI_TextParams params)
+    public String TextGetCategory(String text, AlchemyAPI_TextParams params)
     throws IOException, SAXException,
            ParserConfigurationException, XPathExpressionException
 	{
@@ -394,14 +394,14 @@ public class AlchemyAPI {
 	    return POST("TextGetCategory", "text", params);
 	}
 
-    public Document URLGetText(String url)
+    public String URLGetText(String url)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
         return URLGetText(url, new AlchemyAPI_TextParams());
     }
     
-    public Document URLGetText(String url, AlchemyAPI_TextParams params)
+    public String URLGetText(String url, AlchemyAPI_TextParams params)
     throws IOException, SAXException,
            ParserConfigurationException, XPathExpressionException
 	{
@@ -412,14 +412,14 @@ public class AlchemyAPI {
 	    return GET("URLGetText", "url", params);
 	}
 
-    public Document HTMLGetText(String html, String url)
+    public String HTMLGetText(String html, String url)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
         return HTMLGetText(html, url, new AlchemyAPI_TextParams());
     }
     
-    public Document HTMLGetText(String html, String url, AlchemyAPI_TextParams params)
+    public String HTMLGetText(String html, String url, AlchemyAPI_TextParams params)
     throws IOException, SAXException,
            ParserConfigurationException, XPathExpressionException
 	{
@@ -431,14 +431,14 @@ public class AlchemyAPI {
 	    return POST("HTMLGetText", "html", params);
 	}
 
-    public Document URLGetRawText(String url)
+    public String URLGetRawText(String url)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
         return URLGetRawText(url, new AlchemyAPI_Params());
     }
     
-    public Document URLGetRawText(String url, AlchemyAPI_Params params)
+    public String URLGetRawText(String url, AlchemyAPI_Params params)
     throws IOException, SAXException,
            ParserConfigurationException, XPathExpressionException
 	{
@@ -449,14 +449,14 @@ public class AlchemyAPI {
 	    return GET("URLGetRawText", "url", params);
 	}
 
-    public Document HTMLGetRawText(String html, String url)
+    public String HTMLGetRawText(String html, String url)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
         return HTMLGetRawText(html, url, new AlchemyAPI_Params());
     }
     
-    public Document HTMLGetRawText(String html, String url, AlchemyAPI_Params params)
+    public String HTMLGetRawText(String html, String url, AlchemyAPI_Params params)
     throws IOException, SAXException,
            ParserConfigurationException, XPathExpressionException
 	{
@@ -468,14 +468,14 @@ public class AlchemyAPI {
 	    return POST("HTMLGetRawText", "html", params);
 	}
 
-    public Document URLGetTitle(String url)
+    public String URLGetTitle(String url)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
         return URLGetTitle(url, new AlchemyAPI_Params());
     }
     
-    public Document URLGetTitle(String url, AlchemyAPI_Params params)
+    public String URLGetTitle(String url, AlchemyAPI_Params params)
     throws IOException, SAXException,
            ParserConfigurationException, XPathExpressionException
 	{
@@ -486,14 +486,14 @@ public class AlchemyAPI {
 	    return GET("URLGetTitle", "url", params);
 	}
 
-    public Document HTMLGetTitle(String html, String url)
+    public String HTMLGetTitle(String html, String url)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
         return HTMLGetTitle(html, url, new AlchemyAPI_Params());
     }
     
-    public Document HTMLGetTitle(String html, String url, AlchemyAPI_Params params)
+    public String HTMLGetTitle(String html, String url, AlchemyAPI_Params params)
     throws IOException, SAXException,
            ParserConfigurationException, XPathExpressionException
 	{
@@ -505,14 +505,14 @@ public class AlchemyAPI {
 	    return POST("HTMLGetTitle", "html", params);
 	}
 
-    public Document URLGetFeedLinks(String url)
+    public String URLGetFeedLinks(String url)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
         return URLGetFeedLinks(url, new AlchemyAPI_Params());
     }
     
-    public Document URLGetFeedLinks(String url, AlchemyAPI_Params params)
+    public String URLGetFeedLinks(String url, AlchemyAPI_Params params)
     throws IOException, SAXException,
            ParserConfigurationException, XPathExpressionException
 	{
@@ -523,14 +523,14 @@ public class AlchemyAPI {
 	    return GET("URLGetFeedLinks", "url", params);
 	}
 
-    public Document HTMLGetFeedLinks(String html, String url)
+    public String HTMLGetFeedLinks(String html, String url)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
         return HTMLGetFeedLinks(html, url, new AlchemyAPI_Params());
     }
     
-    public Document HTMLGetFeedLinks(String html, String url, AlchemyAPI_Params params)
+    public String HTMLGetFeedLinks(String html, String url, AlchemyAPI_Params params)
     throws IOException, SAXException,
            ParserConfigurationException, XPathExpressionException
 	{
@@ -542,14 +542,14 @@ public class AlchemyAPI {
 	    return POST("HTMLGetFeedLinks", "html", params);
 	}
 
-    public Document URLGetMicroformats(String url)
+    public String URLGetMicroformats(String url)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
         return URLGetMicroformats(url, new AlchemyAPI_Params());
     }
     
-    public Document URLGetMicroformats(String url, AlchemyAPI_Params params)
+    public String URLGetMicroformats(String url, AlchemyAPI_Params params)
     throws IOException, SAXException,
            ParserConfigurationException, XPathExpressionException
 	{
@@ -560,14 +560,14 @@ public class AlchemyAPI {
 	    return GET("URLGetMicroformatData", "url", params);
 	}
 
-    public Document HTMLGetMicroformats(String html, String url)
+    public String HTMLGetMicroformats(String html, String url)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
         return HTMLGetMicroformats(html, url, new AlchemyAPI_Params());
     }
     
-    public Document HTMLGetMicroformats(String html, String url, AlchemyAPI_Params params)
+    public String HTMLGetMicroformats(String html, String url, AlchemyAPI_Params params)
     throws IOException, SAXException,
            ParserConfigurationException, XPathExpressionException
 	{
@@ -579,14 +579,14 @@ public class AlchemyAPI {
 	    return POST("HTMLGetMicroformatData", "html", params);
 	}
 
-    public Document URLGetConstraintQuery(String url, String query)
+    public String URLGetConstraintQuery(String url, String query)
         throws IOException, XPathExpressionException,
                SAXException, ParserConfigurationException
     {
         return URLGetConstraintQuery(url, query, new AlchemyAPI_ConstraintQueryParams());
     }
     
-    public Document URLGetConstraintQuery(String url, String query, AlchemyAPI_ConstraintQueryParams params)
+    public String URLGetConstraintQuery(String url, String query, AlchemyAPI_ConstraintQueryParams params)
     throws IOException, XPathExpressionException,
            SAXException, ParserConfigurationException
 	{
@@ -601,14 +601,14 @@ public class AlchemyAPI {
 	}
 
 
-    public Document HTMLGetConstraintQuery(String html, String url, String query)
+    public String HTMLGetConstraintQuery(String html, String url, String query)
         throws IOException, XPathExpressionException,
                SAXException, ParserConfigurationException
     {
         return HTMLGetConstraintQuery(html, url, query, new AlchemyAPI_ConstraintQueryParams());
     }
     
-    public Document HTMLGetConstraintQuery(String html, String url, String query, AlchemyAPI_ConstraintQueryParams params)
+    public String HTMLGetConstraintQuery(String html, String url, String query, AlchemyAPI_ConstraintQueryParams params)
     throws IOException, XPathExpressionException,
            SAXException, ParserConfigurationException
 	{
@@ -623,14 +623,14 @@ public class AlchemyAPI {
 	    return POST("HTMLGetConstraintQuery", "html", params);
 	}
 	
-	public Document URLGetTextSentiment(String url)
+	public String URLGetTextSentiment(String url)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
         return URLGetTextSentiment(url, new AlchemyAPI_Params());
     }
     
-    public Document URLGetTextSentiment(String url, AlchemyAPI_Params params)
+    public String URLGetTextSentiment(String url, AlchemyAPI_Params params)
     throws IOException, SAXException,
            ParserConfigurationException, XPathExpressionException
     {
@@ -642,14 +642,14 @@ public class AlchemyAPI {
     }    
     
 
-    public Document HTMLGetTextSentiment(String html, String url)
+    public String HTMLGetTextSentiment(String html, String url)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
         return HTMLGetTextSentiment(html, url, new AlchemyAPI_Params());
     }
     
-    public Document HTMLGetTextSentiment(String html, String url, AlchemyAPI_Params params)
+    public String HTMLGetTextSentiment(String html, String url, AlchemyAPI_Params params)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
@@ -661,14 +661,14 @@ public class AlchemyAPI {
         return POST("HTMLGetTextSentiment", "html", params);
     }
 
-    public Document TextGetTextSentiment(String text)
+    public String TextGetTextSentiment(String text)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
         return TextGetTextSentiment(text, new AlchemyAPI_Params());
     }
     
-    public Document TextGetTextSentiment(String text, AlchemyAPI_Params params)
+    public String TextGetTextSentiment(String text, AlchemyAPI_Params params)
         throws IOException, SAXException,
         ParserConfigurationException, XPathExpressionException 
     {
@@ -681,7 +681,7 @@ public class AlchemyAPI {
 	
 	//------------------
 	
-    public Document URLGetTargetedSentiment(String url, String target)
+    public String URLGetTargetedSentiment(String url, String target)
         throws IOException, SAXException, ParserConfigurationException,
                XPathExpressionException
     {
@@ -689,7 +689,7 @@ public class AlchemyAPI {
                                        new AlchemyAPI_TargetedSentimentParams());
     }
 
-    public Document URLGetTargetedSentiment(String url, String target,
+    public String URLGetTargetedSentiment(String url, String target,
                                             AlchemyAPI_TargetedSentimentParams params)
         throws IOException, SAXException, ParserConfigurationException,
                XPathExpressionException
@@ -703,7 +703,7 @@ public class AlchemyAPI {
         return GET("URLGetTargetedSentiment", "url", params);
     }
 	
-    public Document HTMLGetTargetedSentiment(String html, String url, String target)
+    public String HTMLGetTargetedSentiment(String html, String url, String target)
         throws IOException, SAXException, ParserConfigurationException,
                XPathExpressionException
     {
@@ -711,7 +711,7 @@ public class AlchemyAPI {
                                         new AlchemyAPI_TargetedSentimentParams());
     }
 
-    public Document HTMLGetTargetedSentiment(String html, String url, String target,
+    public String HTMLGetTargetedSentiment(String html, String url, String target,
                                              AlchemyAPI_TargetedSentimentParams params)
         throws IOException, SAXException, ParserConfigurationException,
                XPathExpressionException
@@ -726,7 +726,7 @@ public class AlchemyAPI {
         return POST("HTMLGetTargetedSentiment", "html", params);
     }
 	
-    public Document TextGetTargetedSentiment(String text, String target)
+    public String TextGetTargetedSentiment(String text, String target)
         throws IOException, SAXException, ParserConfigurationException,
                XPathExpressionException
     {
@@ -734,7 +734,7 @@ public class AlchemyAPI {
                                         new AlchemyAPI_TargetedSentimentParams());
     }
 
-    public Document TextGetTargetedSentiment(String text, String target,
+    public String TextGetTargetedSentiment(String text, String target,
                                              AlchemyAPI_TargetedSentimentParams params)
         throws IOException, SAXException, ParserConfigurationException,
 	       XPathExpressionException
@@ -750,13 +750,13 @@ public class AlchemyAPI {
 
 	//------------------
 	
-    public Document URLGetRelations(String url) throws IOException, SAXException,
+    public String URLGetRelations(String url) throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
         return URLGetRelations(url, new AlchemyAPI_RelationParams());
     }
     
-    public Document URLGetRelations(String url, AlchemyAPI_RelationParams params)
+    public String URLGetRelations(String url, AlchemyAPI_RelationParams params)
     throws IOException, SAXException,
            ParserConfigurationException, XPathExpressionException
 	{
@@ -767,14 +767,14 @@ public class AlchemyAPI {
 	    return GET("URLGetRelations", "url", params);
 	}
 
-    public Document HTMLGetRelations(String html, String url)
+    public String HTMLGetRelations(String html, String url)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
         return HTMLGetRelations(html, url, new AlchemyAPI_RelationParams());
     }
     
-    public Document HTMLGetRelations(String html, String url, AlchemyAPI_RelationParams params)
+    public String HTMLGetRelations(String html, String url, AlchemyAPI_RelationParams params)
     throws IOException, SAXException,
            ParserConfigurationException, XPathExpressionException
 	{
@@ -786,14 +786,14 @@ public class AlchemyAPI {
 	    return POST("HTMLGetRelations", "html", params);
 	}
 
-    public Document TextGetRelations(String text)
+    public String TextGetRelations(String text)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
         return TextGetRelations(text, new AlchemyAPI_RelationParams());
     }
     
-    public Document TextGetRelations(String text, AlchemyAPI_RelationParams params)
+    public String TextGetRelations(String text, AlchemyAPI_RelationParams params)
     throws IOException, SAXException,
            ParserConfigurationException, XPathExpressionException
 	{
@@ -806,7 +806,7 @@ public class AlchemyAPI {
 
 	//------------------
 	
-    public Document URLGetCombined(String url) throws IOException, SAXException,
+    public String URLGetCombined(String url) throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
 	AlchemyAPI_CombinedParams params = new AlchemyAPI_CombinedParams();
@@ -814,7 +814,7 @@ public class AlchemyAPI {
         return URLGetCombined(url, params);
     }
     
-    public Document URLGetCombined(String url, AlchemyAPI_CombinedParams params)
+    public String URLGetCombined(String url, AlchemyAPI_CombinedParams params)
     throws IOException, SAXException,
            ParserConfigurationException, XPathExpressionException
 	{
@@ -825,7 +825,7 @@ public class AlchemyAPI {
 	    return GET("URLGetCombinedData", "url", params);
 	}
 
-    public Document TextGetCombined(String text)
+    public String TextGetCombined(String text)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
@@ -834,7 +834,7 @@ public class AlchemyAPI {
         return TextGetCombined(text, params);
     }
     
-    public Document TextGetCombined(String text, AlchemyAPI_CombinedParams params)
+    public String TextGetCombined(String text, AlchemyAPI_CombinedParams params)
     throws IOException, SAXException,
            ParserConfigurationException, XPathExpressionException
 	{
@@ -847,13 +847,13 @@ public class AlchemyAPI {
     
 	//------------------
 	
-    public Document URLGetTaxonomy(String url) throws IOException, SAXException,
+    public String URLGetTaxonomy(String url) throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
         return URLGetTaxonomy(url, new AlchemyAPI_TaxonomyParams());
     }
     
-    public Document URLGetTaxonomy(String url, AlchemyAPI_TaxonomyParams params)
+    public String URLGetTaxonomy(String url, AlchemyAPI_TaxonomyParams params)
     throws IOException, SAXException,
            ParserConfigurationException, XPathExpressionException
 	{
@@ -864,14 +864,14 @@ public class AlchemyAPI {
 	    return GET("URLGetRankedTaxonomy", "url", params);
 	}
 
-    public Document HTMLGetTaxonomy(String html, String url)
+    public String HTMLGetTaxonomy(String html, String url)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
         return HTMLGetTaxonomy(html, url, new AlchemyAPI_TaxonomyParams());
     }
     
-    public Document HTMLGetTaxonomy(String html, String url, AlchemyAPI_TaxonomyParams params)
+    public String HTMLGetTaxonomy(String html, String url, AlchemyAPI_TaxonomyParams params)
     throws IOException, SAXException,
            ParserConfigurationException, XPathExpressionException
 	{
@@ -883,14 +883,14 @@ public class AlchemyAPI {
 	    return POST("HTMLGetRankedTaxonomy", "html", params);
 	}
 
-    public Document TextGetTaxonomy(String text)
+    public String TextGetTaxonomy(String text)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
         return TextGetTaxonomy(text, new AlchemyAPI_TaxonomyParams());
     }
     
-    public Document TextGetTaxonomy(String text, AlchemyAPI_TaxonomyParams params)
+    public String TextGetTaxonomy(String text, AlchemyAPI_TaxonomyParams params)
     throws IOException, SAXException,
            ParserConfigurationException, XPathExpressionException
 	{
@@ -903,13 +903,13 @@ public class AlchemyAPI {
 
 	//------------------
 	
-    public Document URLGetImage(String url) throws IOException, SAXException,
+    public String URLGetImage(String url) throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
         return URLGetImage(url, new AlchemyAPI_ImageParams());
     }
     
-    public Document URLGetImage(String url, AlchemyAPI_ImageParams params)
+    public String URLGetImage(String url, AlchemyAPI_ImageParams params)
     throws IOException, SAXException,
            ParserConfigurationException, XPathExpressionException
 	{
@@ -920,13 +920,13 @@ public class AlchemyAPI {
 	    return GET("URLGetImage", "url", params);
 	}
 
-    public Document URLGetRankedImageKeywords(String url) throws IOException, SAXException,
+    public String URLGetRankedImageKeywords(String url) throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
         return URLGetRankedImageKeywords(url, new AlchemyAPI_ImageParams());
     }
     
-    public Document URLGetRankedImageKeywords(String url, AlchemyAPI_ImageParams params)
+    public String URLGetRankedImageKeywords(String url, AlchemyAPI_ImageParams params)
     throws IOException, SAXException,
            ParserConfigurationException, XPathExpressionException
     {
@@ -937,7 +937,7 @@ public class AlchemyAPI {
         return GET("URLGetRankedImageKeywords", "url", params);
     }
 
-    public Document ImageGetRankedImageKeywords(AlchemyAPI_ImageParams params)
+    public String ImageGetRankedImageKeywords(AlchemyAPI_ImageParams params)
     throws IOException, SAXException,
            ParserConfigurationException, XPathExpressionException
     {
@@ -976,23 +976,23 @@ public class AlchemyAPI {
             throw new IllegalArgumentException("Enter an URL to analyze.");
     }
     
-    private Document GET(String callName, String callPrefix, AlchemyAPI_Params params)
+    private String GET(String callName, String callPrefix, AlchemyAPI_Params params)
     throws IOException, SAXException,
            ParserConfigurationException, XPathExpressionException
-	{
-	    StringBuilder uri = new StringBuilder();
-	    uri.append(_requestUri).append(callPrefix).append('/').append(callName)
-	       .append('?').append("apikey=").append(this._apiKey);
-	    uri.append(params.getParameterString());
-	
-	    URL url = new URL(uri.toString());
-	    HttpURLConnection handle = (HttpURLConnection) url.openConnection();
-	    handle.setDoOutput(true);
-	
-	    return doRequest(handle, params.getOutputMode());
-	}
+    {
+        StringBuilder uri = new StringBuilder();
+        uri.append(_requestUri).append(callPrefix).append('/').append(callName)
+           .append('?').append("apikey=").append(this._apiKey);
+        uri.append(params.getParameterString());
+    
+        URL url = new URL(uri.toString());
+        HttpURLConnection handle = (HttpURLConnection) url.openConnection();
+        handle.setDoOutput(true);
+    
+        return doRequest(handle, params.getOutputMode());
+    }
 
-    private Document POST(String callName, String callPrefix, AlchemyAPI_Params params)
+    private String POST(String callName, String callPrefix, AlchemyAPI_Params params)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
@@ -1015,53 +1015,20 @@ public class AlchemyAPI {
         return doRequest(handle, params.getOutputMode());
     }
 
-    private Document doRequest(HttpURLConnection handle, String outputMode)
+    private String doRequest(HttpURLConnection handle, String outputMode)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
-        DataInputStream istream = new DataInputStream(handle.getInputStream());
-        Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(istream);
-
-        istream.close();
+        String doc = "";
+        BufferedReader in = new BufferedReader(new InputStreamReader(handle.getInputStream()));
+        String inputLine;
+        while ((inputLine = in.readLine()) != null){
+            doc += inputLine + "\n";
+        }
+        in.close();
         handle.disconnect();
-
-        XPathFactory factory = XPathFactory.newInstance();
-
-        if(AlchemyAPI_Params.OUTPUT_XML.equals(outputMode)) {
-        	String statusStr = getNodeValue(factory, doc, "/results/status/text()");
-        	if (null == statusStr || !statusStr.equals("OK")) {
-        		String statusInfoStr = getNodeValue(factory, doc, "/results/statusInfo/text()");
-        		if (null != statusInfoStr && statusInfoStr.length() > 0)
-        			throw new IOException("Error making API call: " + statusInfoStr + '.');
-
-        		throw new IOException("Error making API call: " + statusStr + '.');
-        	}
-        }
-        else if(AlchemyAPI_Params.OUTPUT_RDF.equals(outputMode)) {
-        	String statusStr = getNodeValue(factory, doc, "//RDF/Description/ResultStatus/text()");
-        	if (null == statusStr || !statusStr.equals("OK")) {
-        		String statusInfoStr = getNodeValue(factory, doc, "//RDF/Description/ResultStatus/text()");
-        		if (null != statusInfoStr && statusInfoStr.length() > 0)
-        			throw new IOException("Error making API call: " + statusInfoStr + '.');
-
-        		throw new IOException("Error making API call: " + statusStr + '.');
-        	}
-        }
 
         return doc;
     }
 
-    private String getNodeValue(XPathFactory factory, Document doc, String xpathStr)
-        throws XPathExpressionException
-    {
-        XPath xpath = factory.newXPath();
-        XPathExpression expr = xpath.compile(xpathStr);
-        Object result = expr.evaluate(doc, XPathConstants.NODESET);
-        NodeList results = (NodeList) result;
-
-        if (results.getLength() > 0 && null != results.item(0))
-            return results.item(0).getNodeValue();
-
-        return null;
-    }
 }

@@ -25,21 +25,21 @@ class ParameterTest {
         AlchemyAPI_NamedEntityParams entityParams = new AlchemyAPI_NamedEntityParams();
         entityParams.setDisambiguate(false);
 		entityParams.setSentiment(true);
-        Document doc = alchemyObj.URLGetRankedNamedEntities("http://www.techcrunch.com/", entityParams);
-        System.out.println(getStringFromDocument(doc));
+        String doc = alchemyObj.URLGetRankedNamedEntities("http://www.techcrunch.com/", entityParams);
+        System.out.println(doc);
 
         // Extract a ranked list of named entities from a text string.
         doc = alchemyObj.TextGetRankedNamedEntities(
             "Hello there, my name is Bob Jones.  I live in the United States of America.  " +
             "Where do you live, Fred?", entityParams);
-        System.out.println(getStringFromDocument(doc));
+        System.out.println(doc);
 
         // Load a HTML document to analyze.
         String htmlDoc = getFileContents("data/example.html");
 
         // Extract a ranked list of named entities from a HTML document.
         doc = alchemyObj.HTMLGetRankedNamedEntities(htmlDoc, "http://www.test.com/", entityParams);
-        System.out.println(getStringFromDocument(doc));
+        System.out.println(doc);
 
     }
 

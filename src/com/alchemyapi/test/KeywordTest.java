@@ -20,21 +20,21 @@ class KeywordTest {
         AlchemyAPI alchemyObj = AlchemyAPI.GetInstanceFromFile("api_key.txt");
 
         // Extract topic keywords for a web URL.
-        Document doc = alchemyObj.URLGetRankedKeywords("http://www.techcrunch.com/");
-        System.out.println(getStringFromDocument(doc));
+        String doc = alchemyObj.URLGetRankedKeywords("http://www.techcrunch.com/");
+        System.out.println(doc);
 
         // Extract topic keywords for a text string.
         doc = alchemyObj.TextGetRankedKeywords(
             "Hello there, my name is Bob Jones.  I live in the United States of America.  " +
             "Where do you live, Fred?");
-        System.out.println(getStringFromDocument(doc));
+        System.out.println(doc);
 
         // Load a HTML document to analyze.
         String htmlDoc = getFileContents("data/example.html");
 
         // Extract topic keywords for a HTML document.
         doc = alchemyObj.HTMLGetRankedKeywords(htmlDoc, "http://www.test.com/");
-        System.out.println(getStringFromDocument(doc));
+        System.out.println(doc);
     }
 
     // utility function

@@ -21,46 +21,46 @@ class SentimentTest {
         AlchemyAPI alchemyObj = AlchemyAPI.GetInstanceFromFile("api_key.txt");
 
         // Extract sentiment for a web URL.
-        Document doc = alchemyObj.URLGetTextSentiment("http://www.techcrunch.com/");
-        System.out.println(getStringFromDocument(doc));
+        String doc = alchemyObj.URLGetTextSentiment("http://www.techcrunch.com/");
+        System.out.println(doc);
 
         // Extract sentiment for a text string.
         doc = alchemyObj.TextGetTextSentiment(
             "That hat is ridiculous, Charles.");
-        System.out.println(getStringFromDocument(doc));
+        System.out.println(doc);
 
         // Load a HTML document to analyze.
         String htmlDoc = getFileContents("data/example.html");
 
         // Extract sentiment for a HTML document.
         doc = alchemyObj.HTMLGetTextSentiment(htmlDoc, "http://www.test.com/");
-	System.out.println(getStringFromDocument(doc));
+	System.out.println(doc);
 	
 	// Extract entity-targeted sentiment from a HTML document.	
 	AlchemyAPI_NamedEntityParams entityParams = new AlchemyAPI_NamedEntityParams();
 	entityParams.setSentiment(true);
 	doc = alchemyObj.TextGetRankedNamedEntities("That Mike Tyson is such a sweetheart.", entityParams);
-	System.out.println(getStringFromDocument(doc));
+	System.out.println(doc);
 	
 	// Extract keyword-targeted sentiment from a HTML document.	
 	AlchemyAPI_KeywordParams keywordParams = new AlchemyAPI_KeywordParams();
 	keywordParams.setSentiment(true);
 	doc = alchemyObj.TextGetRankedKeywords("That Mike Tyson is such a sweetheart.", keywordParams);
-	System.out.println(getStringFromDocument(doc));
+	System.out.println(doc);
         
 	//Extract Targeted Sentiment from text
 	AlchemyAPI_TargetedSentimentParams sentimentParams = new AlchemyAPI_TargetedSentimentParams();
 	sentimentParams.setShowSourceText(true);
 	doc = alchemyObj.TextGetTargetedSentiment("This car is terrible.", "car", sentimentParams);
-	System.out.print(getStringFromDocument(doc));
+	System.out.print(doc);
 
 	//Extract Targeted Sentiment from url
 	doc = alchemyObj.URLGetTargetedSentiment("http://techcrunch.com/2012/03/01/keen-on-anand-rajaraman-how-walmart-wants-to-leapfrog-over-amazon-tctv/", "Walmart",sentimentParams);
-	System.out.print(getStringFromDocument(doc));
+	System.out.print(doc);
 
 	//Extract Targeted Sentiment from html
 	doc = alchemyObj.HTMLGetTargetedSentiment(htmlDoc, "http://www.test.com/", "WujWuj", sentimentParams);
-	System.out.print(getStringFromDocument(doc));
+	System.out.print(doc);
 }
 
     // utility function

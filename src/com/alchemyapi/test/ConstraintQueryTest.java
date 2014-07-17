@@ -22,14 +22,14 @@ class ConstraintQueryTest {
         AlchemyAPI alchemyObj = AlchemyAPI.GetInstanceFromFile("api_key.txt");
 
         // Extract first link from an URL.
-        Document doc = alchemyObj.URLGetConstraintQuery("http://microformats.org/wiki/hcard",
+        String doc = alchemyObj.URLGetConstraintQuery("http://microformats.org/wiki/hcard",
                 "1st link");
-        System.out.println(getStringFromDocument(doc));
+        System.out.println(doc);
 
         // Extract first link from a HTML.
         String htmlDoc = getFileContents("data/example.html");
         doc = alchemyObj.HTMLGetConstraintQuery(htmlDoc, "http://www.test.com/", "1st link");
-        System.out.println(getStringFromDocument(doc));
+        System.out.println(doc);
     }
 
     // utility function

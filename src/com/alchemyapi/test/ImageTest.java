@@ -23,12 +23,12 @@ class ImageTest {
         AlchemyAPI alchemyObj = AlchemyAPI.GetInstanceFromFile("api_key.txt");
 
         // Extract image for a web URL.
-        Document doc = alchemyObj.URLGetImage("http://www.techcrunch.com/");
-        System.out.println(getStringFromDocument(doc));
+        String doc = alchemyObj.URLGetImage("http://www.techcrunch.com/");
+        System.out.println(doc);
 
         doc = alchemyObj.URLGetRankedImageKeywords(
             "http://farm4.staticflickr.com/3726/11043305726_fdcb7785ec_m.jpg");
-        System.out.println(getStringFromDocument(doc));
+        System.out.println(doc);
 
         byte[] imageByteArray = readFile("data/cat.jpg");
 
@@ -36,7 +36,7 @@ class ImageTest {
         imageParams.setImage(imageByteArray);
         imageParams.setImagePostMode(AlchemyAPI_ImageParams.RAW);
         doc = alchemyObj.ImageGetRankedImageKeywords(imageParams);
-        System.out.println(getStringFromDocument(doc));
+        System.out.println(doc);
     }
 
     // utility function

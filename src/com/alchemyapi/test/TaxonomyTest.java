@@ -22,21 +22,21 @@ class TaxonomyTest {
         AlchemyAPI alchemyObj = AlchemyAPI.GetInstanceFromFile("api_key.txt");
 
         // Extract a ranked list of relations for a web URL.
-        Document doc = alchemyObj.URLGetTaxonomy("http://www.techcrunch.com/");
-        System.out.println(getStringFromDocument(doc));
+        String doc = alchemyObj.URLGetTaxonomy("http://www.techcrunch.com/");
+        System.out.println(doc);
 
         // Extract a ranked taxonomy from a text string.
         doc = alchemyObj.TextGetTaxonomy(
             "Hello there, my name is Bob Jones.  I live in the United States of America.  " +
             "Where do you live, Fred?");
-        System.out.println(getStringFromDocument(doc));
+        System.out.println(doc);
 
         // Load a HTML document to analyze.
         String htmlDoc = getFileContents("data/example.html");
 
         // Extract a ranked taxonomy from a HTML document.
         doc = alchemyObj.HTMLGetTaxonomy(htmlDoc, "http://www.test.com/");
-        System.out.println(getStringFromDocument(doc));
+        System.out.println(doc);
     }
 
     // utility function
