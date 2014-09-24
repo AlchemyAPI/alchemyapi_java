@@ -967,7 +967,7 @@ public class AlchemyAPI {
     }
 
     private void CheckText(String text) {
-        if (null == text || text.length() < 5)
+        if (null == text)
             throw new IllegalArgumentException("Enter some text to analyze.");
     }
 
