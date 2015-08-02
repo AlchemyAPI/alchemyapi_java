@@ -57,39 +57,39 @@ public class AlchemyApi {
         if(length(configuration.getApiKey()) < 5) { throw new AlchemyApiException("API key must be at least 5 characters"); }
     }
 
-    public Document urlGetAuthor(final URL url) {
+    public Document urlGetAuthor(final String url) {
         return urlGetAuthor(url, new Parameters());
     }
 
-    public Document urlGetAuthor(final URL url, final Parameters params) {
+    public Document urlGetAuthor(final String url, final Parameters params) {
         params.setUrl(url);
         return get("URLGetAuthor", "url", params);
     }
 
-    public Document htmlGetAuthor(final String html, final URL url) {
+    public Document htmlGetAuthor(final String html, final String url) {
         return htmlGetAuthor(html, url, new Parameters());
     }
 
-    public Document htmlGetAuthor(final String html, final URL url, final Parameters params) {
+    public Document htmlGetAuthor(final String html, final String url, final Parameters params) {
         params.setHtml(html);
         params.setUrl(url);
         return post("HTMLGetAuthor", "html", params);
     }
 
-    public Document urlGetRankedNamedEntities(final URL url) {
+    public Document urlGetRankedNamedEntities(final String url) {
         return urlGetRankedNamedEntities(url, new NamedEntityParameters());
     }
 
-    public Document urlGetRankedNamedEntities(final URL url, final NamedEntityParameters params) {
+    public Document urlGetRankedNamedEntities(final String url, final NamedEntityParameters params) {
         params.setUrl(url);
         return get("URLGetRankedNamedEntities", "url", params);
     }
 
-    public Document htmlGetRankedNamedEntities(final String html, final URL url) {
+    public Document htmlGetRankedNamedEntities(final String html, final String url) {
         return htmlGetRankedNamedEntities(html, url, new NamedEntityParameters());
     }
 
-    public Document htmlGetRankedNamedEntities(final String html, final URL url, final NamedEntityParameters params) {
+    public Document htmlGetRankedNamedEntities(final String html, final String url, final NamedEntityParameters params) {
         params.setUrl(url);
         params.setHtml(html);
         return post("HTMLGetRankedNamedEntities", "html", params);
@@ -104,20 +104,20 @@ public class AlchemyApi {
         return post("TextGetRankedNamedEntities", "text", params);
     }
 
-    public Document urlGetRankedConcepts(final URL url) {
+    public Document urlGetRankedConcepts(final String url) {
         return urlGetRankedConcepts(url, new ConceptParameters());
     }
 
-    public Document urlGetRankedConcepts(final URL url, final ConceptParameters params) {
+    public Document urlGetRankedConcepts(final String url, final ConceptParameters params) {
         params.setUrl(url);
         return get("URLGetRankedConcepts", "url", params);
     }
 
-    public Document htmlGetRankedConcepts(final String html, final URL url) {
+    public Document htmlGetRankedConcepts(final String html, final String url) {
         return htmlGetRankedConcepts(html, url, new ConceptParameters());
     }
 
-    public Document htmlGetRankedConcepts(final String html, final URL url, final ConceptParameters params) {
+    public Document htmlGetRankedConcepts(final String html, final String url, final ConceptParameters params) {
         params.setUrl(url);
         params.setHtml(html);
         return post("HTMLGetRankedConcepts", "html", params);
@@ -132,20 +132,20 @@ public class AlchemyApi {
         return post("TextGetRankedConcepts", "text", params);
     }
 
-    public Document urlGetRankedKeywords(final URL url) {
+    public Document urlGetRankedKeywords(final String url) {
         return urlGetRankedKeywords(url, new KeywordParameters());
     }
 
-    public Document urlGetRankedKeywords(final URL url, final KeywordParameters params) {
+    public Document urlGetRankedKeywords(final String url, final KeywordParameters params) {
         params.setUrl(url);
         return get("URLGetRankedKeywords", "url", params);
     }
 
-    public Document htmlGetRankedKeywords(final String html, final URL url) {
+    public Document htmlGetRankedKeywords(final String html, final String url) {
         return htmlGetRankedKeywords(html, url, new KeywordParameters());
     }
 
-    public Document htmlGetRankedKeywords(final String html, final URL url, final KeywordParameters params) {
+    public Document htmlGetRankedKeywords(final String html, final String url, final KeywordParameters params) {
         params.setUrl(url);
         params.setHtml(html);
         return post("HTMLGetRankedKeywords", "html", params);
@@ -161,20 +161,20 @@ public class AlchemyApi {
         return post("TextGetRankedKeywords", "text", params);
     }
 
-    public Document urlGetLanguage(final URL url) {
+    public Document urlGetLanguage(final String url) {
         return urlGetLanguage(url, new LanguageParameters());
     }
 
-    public Document urlGetLanguage(final URL url, final LanguageParameters params) {
+    public Document urlGetLanguage(final String url, final LanguageParameters params) {
         params.setUrl(url);
         return get("URLGetLanguage", "url", params);
     }
 
-    public Document htmlGetLanguage(final String html, final URL url) {
+    public Document htmlGetLanguage(final String html, final String url) {
         return htmlGetLanguage(html, url, new LanguageParameters());
     }
 
-    public Document htmlGetLanguage(final String html, final URL url, final LanguageParameters params) {
+    public Document htmlGetLanguage(final String html, final String url, final LanguageParameters params) {
         params.setUrl(url);
         params.setHtml(html);
         return post("HTMLGetLanguage", "html", params);
@@ -189,20 +189,20 @@ public class AlchemyApi {
         return post("TextGetLanguage", "text", params);
     }
 
-    public Document urlGetCategory(final URL url) {
+    public Document urlGetCategory(final String url) {
         return urlGetCategory(url, new CategoryParameters());
     }
 
-    public Document urlGetCategory(final URL url, final CategoryParameters params) {
+    public Document urlGetCategory(final String url, final CategoryParameters params) {
         params.setUrl(url);
         return get("URLGetCategory", "url", params);
     }
 
-    public Document htmlGetCategory(final String html, URL url) {
+    public Document htmlGetCategory(final String html, final String url) {
         return htmlGetCategory(html, url, new CategoryParameters());
     }
 
-    public Document htmlGetCategory(final String html, final URL url, final CategoryParameters params) {
+    public Document htmlGetCategory(final String html, final String url, final CategoryParameters params) {
         params.setUrl(url);
         params.setHtml(html);
         return post("HTMLGetCategory", "html", params);
@@ -217,106 +217,106 @@ public class AlchemyApi {
         return post("TextGetCategory", "text", params);
     }
 
-    public Document urlGetText(final URL url) {
+    public Document urlGetText(final String url) {
         return urlGetText(url, new TextParameters());
     }
 
-    public Document urlGetText(final URL url, final TextParameters params) {
+    public Document urlGetText(final String url, final TextParameters params) {
         params.setUrl(url);
         return get("URLGetText", "url", params);
     }
 
-    public Document htmlGetText(final String html, final URL url) {
+    public Document htmlGetText(final String html, final String url) {
         return htmlGetText(html, url, new TextParameters());
     }
 
-    public Document htmlGetText(final String html, final URL url, final TextParameters params) {
+    public Document htmlGetText(final String html, final String url, final TextParameters params) {
         params.setUrl(url);
         params.setHtml(html);
         return post("HTMLGetText", "html", params);
     }
 
-    public Document urlGetRawText(final URL url) {
+    public Document urlGetRawText(final String url) {
         return urlGetRawText(url, new Parameters());
     }
 
-    public Document urlGetRawText(final URL url, final Parameters params) {
+    public Document urlGetRawText(final String url, final Parameters params) {
         params.setUrl(url);
         return get("URLGetRawText", "url", params);
     }
 
-    public Document htmlGetRawText(final String html, final URL url) {
+    public Document htmlGetRawText(final String html, final String url) {
         return htmlGetRawText(html, url, new Parameters());
     }
 
-    public Document htmlGetRawText(final String html, final URL url, final Parameters params) {
+    public Document htmlGetRawText(final String html, final String url, final Parameters params) {
         params.setUrl(url);
         params.setHtml(html);
         return post("HTMLGetRawText", "html", params);
     }
 
-    public Document urlGetTitle(final URL url) {
+    public Document urlGetTitle(final String url) {
         return urlGetTitle(url, new Parameters());
     }
 
-    public Document urlGetTitle(final URL url, final Parameters params) {
+    public Document urlGetTitle(final String url, final Parameters params) {
         params.setUrl(url);
         return get("URLGetTitle", "url", params);
     }
 
-    public Document htmlGetTitle(final String html, final URL url) {
+    public Document htmlGetTitle(final String html, final String url) {
         return htmlGetTitle(html, url, new Parameters());
     }
 
-    public Document htmlGetTitle(final String html, final URL url, final Parameters params) {
+    public Document htmlGetTitle(final String html, final String url, final Parameters params) {
         params.setUrl(url);
         params.setHtml(html);
         return post("HTMLGetTitle", "html", params);
     }
 
-    public Document urlGetFeedLinks(final URL url) {
+    public Document urlGetFeedLinks(final String url) {
         return urlGetFeedLinks(url, new Parameters());
     }
 
-    public Document urlGetFeedLinks(final URL url, final Parameters params) {
+    public Document urlGetFeedLinks(final String url, final Parameters params) {
         params.setUrl(url);
         return get("URLGetFeedLinks", "url", params);
     }
 
-    public Document htmlGetFeedLinks(final String html, final URL url) {
+    public Document htmlGetFeedLinks(final String html, final String url) {
         return htmlGetFeedLinks(html, url, new Parameters());
     }
 
-    public Document htmlGetFeedLinks(final String html, final URL url, final Parameters params) {
+    public Document htmlGetFeedLinks(final String html, final String url, final Parameters params) {
         params.setUrl(url);
         params.setHtml(html);
         return post("HTMLGetFeedLinks", "html", params);
     }
 
-    public Document urlGetMicroformats(final URL url) {
+    public Document urlGetMicroformats(final String url) {
         return urlGetMicroformats(url, new Parameters());
     }
 
-    public Document urlGetMicroformats(final URL url, final Parameters params) {
+    public Document urlGetMicroformats(final String url, final Parameters params) {
         params.setUrl(url);
         return get("URLGetMicroformatData", "url", params);
     }
 
-    public Document htmlGetMicroformats(final String html, final URL url) {
+    public Document htmlGetMicroformats(final String html, final String url) {
         return htmlGetMicroformats(html, url, new Parameters());
     }
 
-    public Document htmlGetMicroformats(final String html, final URL url, final Parameters params) {
+    public Document htmlGetMicroformats(final String html, final String url, final Parameters params) {
         params.setUrl(url);
         params.setHtml(html);
         return post("HTMLGetMicroformatData", "html", params);
     }
 
-    public Document urlGetConstraintQuery(final URL url, final String query) {
+    public Document urlGetConstraintQuery(final String url, final String query) {
         return urlGetConstraintQuery(url, query, new ConstraintQueryParameters());
     }
 
-    public Document urlGetConstraintQuery(final URL url, final String query, final ConstraintQueryParameters params) {
+    public Document urlGetConstraintQuery(final String url, final String query, final ConstraintQueryParameters params) {
         if(trimToEmpty(query).length() < 2) {
             throw new AlchemyApiException("Constraint query must be at least 2 characters long");
         }
@@ -326,11 +326,11 @@ public class AlchemyApi {
     }
 
 
-    public Document htmlGetConstraintQuery(final String html, final URL url, final String query) {
+    public Document htmlGetConstraintQuery(final String html, final String url, final String query) {
         return htmlGetConstraintQuery(html, url, query, new ConstraintQueryParameters());
     }
 
-    public Document htmlGetConstraintQuery(final String html, URL url, final String query, final ConstraintQueryParameters params) {
+    public Document htmlGetConstraintQuery(final String html, final String url, final String query, final ConstraintQueryParameters params) {
         if(trimToEmpty(query).length() < 2) {
             throw new AlchemyApiException("Constraint query must be at least 2 characters long");
         }
@@ -340,20 +340,20 @@ public class AlchemyApi {
         return post("HTMLGetConstraintQuery", "html", params);
     }
 
-    public Document urlGetTextSentiment(final URL url) {
+    public Document urlGetTextSentiment(final String url) {
         return urlGetTextSentiment(url, new Parameters());
     }
 
-    public Document urlGetTextSentiment(final URL url, final Parameters params) {
+    public Document urlGetTextSentiment(final String url, final Parameters params) {
         params.setUrl(url);
         return get("URLGetTextSentiment", "url", params);
     }
 
-    public Document htmlGetTextSentiment(final String html, final URL url) {
+    public Document htmlGetTextSentiment(final String html, final String url) {
         return htmlGetTextSentiment(html, url, new Parameters());
     }
 
-    public Document htmlGetTextSentiment(final String html, URL url, final Parameters params) {
+    public Document htmlGetTextSentiment(final String html, final String url, final Parameters params) {
         params.setUrl(url);
         params.setHtml(html);
         return post("HTMLGetTextSentiment", "html", params);
@@ -368,21 +368,21 @@ public class AlchemyApi {
         return post("TextGetTextSentiment", "text", params);
     }
 
-    public Document urlGetTargetedSentiment(final URL url, final String target) {
+    public Document urlGetTargetedSentiment(final String url, final String target) {
         return urlGetTargetedSentiment(url, target, new TargetedSentimentParameters());
     }
 
-    public Document urlGetTargetedSentiment(final URL url, final String target, final TargetedSentimentParameters params) {
+    public Document urlGetTargetedSentiment(final String url, final String target, final TargetedSentimentParameters params) {
         params.setUrl(url);
         params.setTarget(target);
         return get("URLGetTargetedSentiment", "url", params);
     }
 
-    public Document htmlGetTargetedSentiment(final String html, final URL url, final String target) {
+    public Document htmlGetTargetedSentiment(final String html, final String url, final String target) {
         return htmlGetTargetedSentiment(html, url, target, new TargetedSentimentParameters());
     }
 
-    public Document htmlGetTargetedSentiment(final String html, final URL url, final String target, final TargetedSentimentParameters params) {
+    public Document htmlGetTargetedSentiment(final String html, final String url, final String target, final TargetedSentimentParameters params) {
         params.setHtml(html);
         params.setUrl(url);
         params.setTarget(target);
@@ -399,20 +399,20 @@ public class AlchemyApi {
         return post("TextGetTargetedSentiment", "text", params);
     }
 
-    public Document urlGetRelations(final URL url) {
+    public Document urlGetRelations(final String url) {
         return urlGetRelations(url, new RelationParameters());
     }
 
-    public Document urlGetRelations(final URL url, final RelationParameters params) {
+    public Document urlGetRelations(final String url, final RelationParameters params) {
         params.setUrl(url);
         return get("URLGetRelations", "url", params);
     }
 
-    public Document HTMLGetRelations(final String html, final URL url) {
+    public Document HTMLGetRelations(final String html, final String url) {
         return HTMLGetRelations(html, url, new RelationParameters());
     }
 
-    public Document HTMLGetRelations(final String html, final URL url, final RelationParameters params) {
+    public Document HTMLGetRelations(final String html, final String url, final RelationParameters params) {
         params.setUrl(url);
         params.setHtml(html);
         return post("HTMLGetRelations", "html", params);
@@ -427,13 +427,13 @@ public class AlchemyApi {
         return post("TextGetRelations", "text", params);
     }
 
-    public Document urlGetCombined(final URL url) {
+    public Document urlGetCombined(final String url) {
         final CombinedParameters params = new CombinedParameters();
         params.setExtractAll();
         return urlGetCombined(url, params);
     }
 
-    public Document urlGetCombined(final URL url, final CombinedParameters params) {
+    public Document urlGetCombined(final String url, final CombinedParameters params) {
         params.setUrl(url);
         return get("URLGetCombinedData", "url", params);
     }
@@ -449,20 +449,20 @@ public class AlchemyApi {
         return post("TextGetCombinedData", "text", params);
     }
 
-    public Document urlGetTaxonomy(final URL url) {
+    public Document urlGetTaxonomy(final String url) {
         return urlGetTaxonomy(url, new TaxonomyParameters());
     }
 
-    public Document urlGetTaxonomy(final URL url, final TaxonomyParameters params) {
+    public Document urlGetTaxonomy(final String url, final TaxonomyParameters params) {
         params.setUrl(url);
         return get("URLGetRankedTaxonomy", "url", params);
     }
 
-    public Document htmlGetTaxonomy(final String html, final URL url) {
+    public Document htmlGetTaxonomy(final String html, final String url) {
         return htmlGetTaxonomy(html, url, new TaxonomyParameters());
     }
 
-    public Document htmlGetTaxonomy(final String html, final URL url, final TaxonomyParameters params) {
+    public Document htmlGetTaxonomy(final String html, final String url, final TaxonomyParameters params) {
         params.setUrl(url);
         params.setHtml(html);
         return post("HTMLGetRankedTaxonomy", "html", params);
@@ -477,20 +477,20 @@ public class AlchemyApi {
         return post("TextGetRankedTaxonomy", "text", params);
     }
 
-    public Document urlGetImage(final URL url) {
+    public Document urlGetImage(final String url) {
         return urlGetImage(url, new ImageParameters());
     }
 
-    public Document urlGetImage(final URL url, final ImageParameters params) {
+    public Document urlGetImage(final String url, final ImageParameters params) {
         params.setUrl(url);
         return get("URLGetImage", "url", params);
     }
 
-    public Document urlGetRankedImageKeywords(final URL url) {
+    public Document urlGetRankedImageKeywords(final String url) {
         return urlGetRankedImageKeywords(url, new ImageParameters());
     }
 
-    public Document urlGetRankedImageKeywords(final URL url, final ImageParameters params) {
+    public Document urlGetRankedImageKeywords(final String url, final ImageParameters params) {
         params.setUrl(url);
         return get("URLGetRankedImageKeywords", "url", params);
     }

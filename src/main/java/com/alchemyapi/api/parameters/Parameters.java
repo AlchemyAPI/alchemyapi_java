@@ -1,8 +1,14 @@
 package com.alchemyapi.api.parameters;
 
+import com.alchemyapi.api.exceptions.AlchemyApiException;
+
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.Map;
+
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 
 public class Parameters {
@@ -10,17 +16,18 @@ public class Parameters {
     public static final String OUTPUT_XML = "xml";
     public static final String OUTPUT_RDF = "rdf";
 
-    private URL url;
+    private String url;
     private String html;
     private String text;
     private String outputMode = OUTPUT_XML; // TODO make json default
     private String customParameters;
 
-    public URL getUrl() {
+    public String getUrl() {
         return url;
     }
 
-    public void setUrl(URL url) {
+    public void setUrl(String url) {
+        validateUrl(url);
         this.url = url;
     }
 
@@ -29,6 +36,7 @@ public class Parameters {
     }
 
     public void setHtml(String html) {
+        validateHtml(html);
         this.html = html;
     }
 
@@ -37,6 +45,7 @@ public class Parameters {
     }
 
     public void setText(String text) {
+        validateText(text);
         this.text = text;
     }
 
@@ -55,32 +64,51 @@ public class Parameters {
         return customParameters;
     }
 
-    public void setCustomParameters(String... customParameters) {
-        StringBuilder data = new StringBuilder();
+    public void setCustomParameters(Map<String, String> customParameters) {
+        final StringBuilder data = new StringBuilder();
         try {
-            for (int i = 0; i < customParameters.length; ++i) {
-                data.append('&').append(customParameters[i]);
-                if (++i < customParameters.length)
-                    data.append('=').append(URLEncoder.encode(customParameters[i], "UTF8"));
+            for(Map.Entry<String, String> parameter : customParameters.entrySet()) {
+                data.append('&')
+                    .append(parameter.getKey())
+                    .append('=')
+                    .append(URLEncoder.encode(parameter.getValue(), "UTF-8"));
             }
+
+            this.customParameters = data.toString();
         } catch (UnsupportedEncodingException e) {
-            this.customParameters = "";
-            return;
+            throw new AlchemyApiException(e);
         }
-        this.customParameters = data.toString();
     }
 
     public String getUrlQuery() {
-        String retString = "";
+        final StringBuilder urlQuery = new StringBuilder();
         try {
-            if (url != null) retString += "&url=" + URLEncoder.encode(url.toString(), "UTF-8");
-            if (html != null) retString += "&html=" + URLEncoder.encode(html, "UTF-8");
-            if (text != null) retString += "&text=" + URLEncoder.encode(text, "UTF-8");
-            if (customParameters != null) retString += customParameters;
-            if (outputMode != null) retString += "&outputMode=" + outputMode;
+            if (url != null) { urlQuery.append("&url=").append(URLEncoder.encode(url, "UTF-8")); }
+            if (html != null) { urlQuery.append( "&html=").append(URLEncoder.encode(html, "UTF-8")); }
+            if (text != null) { urlQuery.append("&text=").append(URLEncoder.encode(text, "UTF-8")); }
+            if (customParameters != null) { urlQuery.append(customParameters); }
+            if (outputMode != null) { urlQuery.append("&outputMode=").append(outputMode); }
+            return urlQuery.toString();
+
         } catch (UnsupportedEncodingException e) {
-            retString = "";
+            throw new AlchemyApiException(e);
         }
-        return retString;
     }
+
+    private static void validateUrl(final String url) {
+        try {
+            new URL(url);
+        } catch (MalformedURLException e) {
+            throw new AlchemyApiException(e);
+        }
+    }
+
+    private static void validateHtml(final String html) {
+        if(isBlank(html)) { throw new AlchemyApiException("Html must not be blank"); }
+    }
+
+    private static void validateText(final String text) {
+        if(isBlank(text)) { throw new AlchemyApiException("Text must not be blank"); }
+    }
+
 }

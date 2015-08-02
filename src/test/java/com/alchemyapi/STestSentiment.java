@@ -15,15 +15,14 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 
 public class STestSentiment {
 
     private final AlchemyApi alchemyApi = TestApiFactory.build(new File(System.getProperty("user.home"), ".alchemy/api.key"));
 
     @Test
-    public void url() throws IOException, SAXException, ParserConfigurationException, XPathExpressionException {
-        final Document document = alchemyApi.urlGetTextSentiment(new URL("http://www.techcrunch.com/"));
+    public void url() {
+        final Document document = alchemyApi.urlGetTextSentiment("http://www.techcrunch.com/");
         System.out.println(DocumentUtils.toString(document));
     }
 
@@ -36,7 +35,7 @@ public class STestSentiment {
     @Test
     public void file() throws SAXException, ParserConfigurationException, XPathExpressionException, IOException {
         final String html = ResourceUtils.toString("data/example.html");
-        final Document document = alchemyApi.htmlGetTextSentiment(html, new URL("http://www.test.com/"));
+        final Document document = alchemyApi.htmlGetTextSentiment(html, "http://www.test.com/");
         System.out.println(DocumentUtils.toString(document));
     }
 
@@ -64,7 +63,7 @@ public class STestSentiment {
         sentimentParams.setShowSourceText(true);
 
         final Document document = alchemyApi.urlGetTargetedSentiment(
-                new URL("http://techcrunch.com/2012/03/01/keen-on-anand-rajaraman-how-walmart-wants-to-leapfrog-over-amazon-tctv/"),
+                "http://techcrunch.com/2012/03/01/keen-on-anand-rajaraman-how-walmart-wants-to-leapfrog-over-amazon-tctv/",
                 "Walmart",
                 sentimentParams);
         System.out.print(DocumentUtils.toString(document));
@@ -76,7 +75,7 @@ public class STestSentiment {
         sentimentParams.setShowSourceText(true);
 
         final String html = ResourceUtils.toString("data/example.html");
-        final Document document2 = alchemyApi.htmlGetTargetedSentiment(html, new URL("http://www.test.com/"), "WujWuj", sentimentParams);
+        final Document document2 = alchemyApi.htmlGetTargetedSentiment(html, "http://www.test.com/", "WujWuj", sentimentParams);
         System.out.print(DocumentUtils.toString(document2));
     }
 
