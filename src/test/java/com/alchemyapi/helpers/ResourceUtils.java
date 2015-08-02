@@ -23,4 +23,13 @@ public class ResourceUtils {
         return Thread.currentThread().getContextClassLoader().getResourceAsStream(resource);
     }
 
+    public static byte[] toBytes(final String resource) {
+        try {
+            return IOUtils.toByteArray(toInputStream(resource));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }

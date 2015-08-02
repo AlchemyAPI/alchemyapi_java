@@ -11,6 +11,9 @@ import org.junit.Test;
 
 import java.io.File;
 
+/**
+ * Created by kenny
+ */
 public class STestSentiment {
 
     private final AlchemyApi alchemyApi = TestApiFactory.build(new File(System.getProperty("user.home"), ".alchemy/api.key"));
@@ -28,7 +31,7 @@ public class STestSentiment {
     }
 
     @Test
-    public void file() {
+    public void html() {
         final String html = ResourceUtils.toString("data/example.html");
         final Document document = alchemyApi.htmlGetTextSentiment(html, "http://www.test.com/");
         System.out.println(document);

@@ -15,15 +15,14 @@ import com.alchemyapi.api.parameters.TargetedSentimentParameters;
 import com.alchemyapi.api.parameters.TaxonomyParameters;
 import com.alchemyapi.api.parameters.TextParameters;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Parser;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPathExpressionException;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -33,6 +32,9 @@ import java.nio.charset.Charset;
 import static org.apache.commons.lang3.StringUtils.length;
 import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 
+/**
+ * Created by kenny
+ */
 public class AlchemyApi {
 
     private static final Logger LOGGER = Logger.getLogger(AlchemyApi.class);
@@ -146,8 +148,7 @@ public class AlchemyApi {
         return post("HTMLGetRankedKeywords", "html", params);
     }
 
-    public Document textGetRankedKeywords(final String text) throws IOException, SAXException,
-            ParserConfigurationException, XPathExpressionException {
+    public Document textGetRankedKeywords(final String text) {
         return textGetRankedKeywords(text, new KeywordParameters());
     }
 
@@ -403,11 +404,11 @@ public class AlchemyApi {
         return get("URLGetRelations", "url", params);
     }
 
-    public Document HTMLGetRelations(final String html, final String url) {
-        return HTMLGetRelations(html, url, new RelationParameters());
+    public Document htmlGetRelations(final String html, final String url) {
+        return htmlGetRelations(html, url, new RelationParameters());
     }
 
-    public Document HTMLGetRelations(final String html, final String url, final RelationParameters params) {
+    public Document htmlGetRelations(final String html, final String url, final RelationParameters params) {
         params.setUrl(url);
         params.setHtml(html);
         return post("HTMLGetRelations", "html", params);
@@ -547,7 +548,7 @@ public class AlchemyApi {
         }
     }
 
-    // TODO add json handling
+    // TODO support json, by default
     // TODO return pojo with parsed field, but allow a "raw" xml/json getter to protect against api updates
     private Document doRequest(final HttpURLConnection httpURLConnection, final Parameters parameters) {
         try {
@@ -562,7 +563,8 @@ public class AlchemyApi {
                     return praseRdf(response, parameters);
 
                 case Parameters.OUTPUT_JSON:
-                    throw new AlchemyApiException("Json Response not supported yet");
+                    // return parseJson(response, parameters);
+                    throw new AlchemyApiException("Json responses are not currently supported");
 
                 default:
                     throw new AlchemyApiException("Unknown output mode, must be one of [xml,rdf,json]");
@@ -570,6 +572,20 @@ public class AlchemyApi {
         } catch (IOException e) {
             throw new AlchemyApiException(e);
         }
+    }
+
+    private JSONObject parseJson(final String response, final Parameters parameters) {
+        final JSONObject json = new JSONObject(response);
+        if(json.has("results")) {
+            final JSONObject results = json.getJSONObject("results");
+            if(!StringUtils.equals(results.optString("status"), "OK")) {
+                if(results.has("statusInfo")) {
+                    throw new AlchemyApiException("Error making API call: " + results.optString("statusInfo"));
+                }
+                throw new AlchemyApiException("Error making API call: " + results.optString("status"));
+            }
+        }
+        return json;
     }
 
     private Document parseXml(final String response, final Parameters parameters) {
@@ -586,11 +602,10 @@ public class AlchemyApi {
         return document;
     }
 
-    // TODO investigate rdf format
     private Document praseRdf(final String response, final Parameters parameters) {
         final Document document = Jsoup.parse(response, parameters.getEncoding(), Parser.xmlParser());
-
-        final Element status = document.select("RDF > Description > ResultStatus").first();
+                                    System.out.println("RAW: " + response);
+        final Element status = document.select("rdf|RDF > rdf|Description > aapi|ResultStatus").first();
         if (status == null || !status.text().equals("OK")) {
             throw new AlchemyApiException("Error making API call: " + status);
         }
@@ -599,12 +614,6 @@ public class AlchemyApi {
 
     private String buildBaseApiUrl() {
         return API_URL.replace("{SUB_DOMAIN}", configuration.getApiSubDomain());
-    }
-
-    private String parseBaseUrl(final HttpURLConnection httpURLConnection) {
-        final URL url = httpURLConnection.getURL();
-        String path = url.getFile().substring(0, url.getFile().lastIndexOf('/'));
-        return url.getProtocol() + "://" + url.getHost() + path;
     }
 
 }
