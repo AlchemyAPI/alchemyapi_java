@@ -21,6 +21,7 @@ public class Parameters {
     private String text;
     private String outputMode = OUTPUT_XML; // TODO make json default
     private String customParameters;
+    private String encoding = "UTF-8";
 
     public String getUrl() {
         return url;
@@ -47,6 +48,14 @@ public class Parameters {
     public void setText(String text) {
         validateText(text);
         this.text = text;
+    }
+
+    public String getEncoding() {
+        return encoding;
+    }
+
+    public void setEncoding(final String encoding) {
+        this.encoding = encoding;
     }
 
     public String getOutputMode() {

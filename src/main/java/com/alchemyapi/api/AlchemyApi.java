@@ -14,27 +14,22 @@ import com.alchemyapi.api.parameters.RelationParameters;
 import com.alchemyapi.api.parameters.TargetedSentimentParameters;
 import com.alchemyapi.api.parameters.TaxonomyParameters;
 import com.alchemyapi.api.parameters.TextParameters;
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.parser.Parser;
 import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
 
-import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.commons.lang3.StringUtils.length;
 import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 
@@ -510,32 +505,32 @@ public class AlchemyApi {
             outputStream.write(image);
             outputStream.close();
 
-            return doRequest(handle, params.getOutputMode());
+            return doRequest(handle, params);
 
         } catch(IOException e) {
             throw new AlchemyApiException(e);
         }
     }
 
-    private Document get(final String callName, final String callPrefix, final Parameters params) {
+    private Document get(final String callName, final String callPrefix, final Parameters parameters) {
         try {
-            final String urlQuery = "?apikey=" + configuration.getApiKey() + params.getUrlQuery();
+            final String urlQuery = "?apikey=" + configuration.getApiKey() + parameters.getUrlQuery();
             final URL url = new URL(buildBaseApiUrl() + callPrefix + "/" + callName + urlQuery);
 
             final HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             httpURLConnection.setDoOutput(true);
 
-            return doRequest(httpURLConnection, params.getOutputMode());
+            return doRequest(httpURLConnection, parameters);
 
         } catch(IOException e) {
             throw new AlchemyApiException(e);
         }
     }
 
-    private Document post(final String callName, final String callPrefix, final Parameters params) {
+    private Document post(final String callName, final String callPrefix, final Parameters parameters) {
         try {
             final URL url = new URL(buildBaseApiUrl() + callPrefix + "/" + callName);
-            final String data = "apikey=" + configuration.getApiKey() + params.getUrlQuery();
+            final String data = "apikey=" + configuration.getApiKey() + parameters.getUrlQuery();
 
             final HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             httpURLConnection.setDoOutput(true);
@@ -545,7 +540,7 @@ public class AlchemyApi {
             outputStream.write(data.getBytes(Charset.forName("UTF-8")));
             outputStream.close();
 
-            return doRequest(httpURLConnection, params.getOutputMode());
+            return doRequest(httpURLConnection, parameters);
 
         } catch(IOException e) {
             throw new AlchemyApiException(e);
@@ -554,37 +549,36 @@ public class AlchemyApi {
 
     // TODO add json handling
     // TODO return pojo with parsed field, but allow a "raw" xml/json getter to protect against api updates
-    private Document doRequest(final HttpURLConnection httpURLConnection, final String outputMode) {
+    private Document doRequest(final HttpURLConnection httpURLConnection, final Parameters parameters) {
         try {
-            final DataInputStream inputStream = new DataInputStream(httpURLConnection.getInputStream());
-            final Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(inputStream);
-
-            inputStream.close();
+            final String response = IOUtils.toString(httpURLConnection.getInputStream());
             httpURLConnection.disconnect();
 
-            switch (outputMode) {
+            switch (parameters.getOutputMode()) {
                 case Parameters.OUTPUT_XML:
-                    return parseXml(document);
+                    return parseXml(response, parameters);
 
                 case Parameters.OUTPUT_RDF:
-                    return praseRdf(document);
+                    return praseRdf(response, parameters);
 
                 case Parameters.OUTPUT_JSON:
                     throw new AlchemyApiException("Json Response not supported yet");
-            }
-            return document;
 
-        } catch (SAXException | ParserConfigurationException | IOException e) {
+                default:
+                    throw new AlchemyApiException("Unknown output mode, must be one of [xml,rdf,json]");
+            }
+        } catch (IOException e) {
             throw new AlchemyApiException(e);
         }
     }
 
-    private Document parseXml(final Document document) {
-        final XPathFactory factory = XPathFactory.newInstance();
-        final String status = getNodeValue(factory, document, "/results/status/text()");
-        if (isBlank(status) || !status.equals("OK")) {
-            final String statusInfo = getNodeValue(factory, document, "/results/statusInfo/text()");
-            if (isNotBlank(statusInfo)) {
+    private Document parseXml(final String response, final Parameters parameters) {
+        final Document document = Jsoup.parse(response, parameters.getEncoding(), Parser.xmlParser());
+
+        final Element status = document.select("results > status").first();
+        if (status == null || !status.text().equals("OK")) {
+            final Element statusInfo = document.select("results > statusInfo").first();
+            if (statusInfo != null) {
                 throw new AlchemyApiException("Error making API call: " + statusInfo);
             }
             throw new AlchemyApiException("Error making API call: " + status);
@@ -592,36 +586,25 @@ public class AlchemyApi {
         return document;
     }
 
-    private Document praseRdf(final Document document) {
-        final XPathFactory factory = XPathFactory.newInstance();
-        final String status = getNodeValue(factory, document, "//RDF/Description/ResultStatus/text()");
-        if (isBlank(status) || !status.equals("OK")) {
-            final String statusInfo = getNodeValue(factory, document, "//RDF/Description/ResultStatus/text()");
-            if (isNotBlank(statusInfo)) {
-                throw new AlchemyApiException("Error making API call: " + statusInfo);
-            }
+    // TODO investigate rdf format
+    private Document praseRdf(final String response, final Parameters parameters) {
+        final Document document = Jsoup.parse(response, parameters.getEncoding(), Parser.xmlParser());
+
+        final Element status = document.select("RDF > Description > ResultStatus").first();
+        if (status == null || !status.text().equals("OK")) {
             throw new AlchemyApiException("Error making API call: " + status);
         }
         return document;
-    }
-
-    private String getNodeValue(XPathFactory factory, Document doc, String xpathStr) {
-        try {
-            final XPath xpath = factory.newXPath();
-            final XPathExpression expr = xpath.compile(xpathStr);
-            final Object result = expr.evaluate(doc, XPathConstants.NODESET);
-            final NodeList results = (NodeList) result;
-
-            if(results.getLength() == 0 || results.item(0) == null) { return null; }
-            return results.item(0).getNodeValue();
-
-        } catch (XPathExpressionException e) {
-            throw new AlchemyApiException(e);
-        }
     }
 
     private String buildBaseApiUrl() {
         return API_URL.replace("{SUB_DOMAIN}", configuration.getApiSubDomain());
+    }
+
+    private String parseBaseUrl(final HttpURLConnection httpURLConnection) {
+        final URL url = httpURLConnection.getURL();
+        String path = url.getFile().substring(0, url.getFile().lastIndexOf('/'));
+        return url.getProtocol() + "://" + url.getHost() + path;
     }
 
 }
