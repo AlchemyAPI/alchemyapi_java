@@ -10,8 +10,13 @@ import java.io.InputStream;
  */
 public class ResourceUtils {
 
-    public static String toString(final String resource) throws IOException {
-        return IOUtils.toString(toInputStream(resource));
+    public static String toString(final String resource) {
+        try {
+            return IOUtils.toString(toInputStream(resource));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public static InputStream toInputStream(final String resource) {

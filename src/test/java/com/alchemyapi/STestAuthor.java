@@ -12,19 +12,21 @@ import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
 
 public class STestAuthor {
-	
-    @Test
-	public void demo() throws IOException, SAXException, ParserConfigurationException, XPathExpressionException {
-		// Create an AlchemyAPI object.
-		final AlchemyAPI alchemyAPI = AlchemyAPI.GetInstanceFromString(ResourceUtils.toString("api_key.txt"));
-	        
-		// Load a Html document to analyze.
-		final String htmlDoc = ResourceUtils.toString("data/example.html");
-	    final Document doc = alchemyAPI.URLGetAuthor("http://www.politico.com/blogs/media/2012/02/detroit-news-ed-upset-over-romney-edit-115247.html");
-		System.out.println(DocumentUtils.toString(doc));
-	        
-		final Document doc2 = alchemyAPI.HTMLGetAuthor(htmlDoc, "http://www.test.com/");
-		System.out.println(DocumentUtils.toString(doc2));
+
+	private final AlchemyAPI alchemyAPI = AlchemyAPI.GetInstanceFromString(ResourceUtils.toString("api_key.txt"));
+
+	@Test
+	public void parseFromTestData() throws SAXException, ParserConfigurationException, XPathExpressionException, IOException {
+		final String html = ResourceUtils.toString("data/example.html");
+
+		final Document document = alchemyAPI.HTMLGetAuthor(html, "http://www.test.com/");
+		System.out.println(DocumentUtils.toString(document));
+	}
+
+	@Test
+	public void parseFromUrl() throws SAXException, ParserConfigurationException, XPathExpressionException, IOException {
+	    final Document document = alchemyAPI.URLGetAuthor("http://www.politico.com/blogs/media/2012/02/detroit-news-ed-upset-over-romney-edit-115247.html");
+		System.out.println(DocumentUtils.toString(document));
 	}
 
 }
