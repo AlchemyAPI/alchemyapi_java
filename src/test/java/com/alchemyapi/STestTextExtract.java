@@ -3,6 +3,7 @@ package com.alchemyapi;
 import com.alchemyapi.api.AlchemyApi;
 import com.alchemyapi.helpers.ResourceUtils;
 import com.alchemyapi.helpers.TestApiFactory;
+import org.apache.log4j.Logger;
 import org.jsoup.nodes.Document;
 import org.junit.Test;
 
@@ -13,6 +14,8 @@ import java.io.File;
  */
 public class STestTextExtract {
 
+    private static final Logger LOGGER = Logger.getLogger(STestTextExtract.class);
+
     private final AlchemyApi alchemyApi = TestApiFactory.build(new File(System.getProperty("user.home"), ".alchemy/api.key"));
 
     /**
@@ -21,7 +24,7 @@ public class STestTextExtract {
     @Test
     public void urlClean() {
         final Document document = alchemyApi.urlGetText("http://www.techcrunch.com/");
-        System.out.println(document);
+        LOGGER.info(document);
     }
 
     /**
@@ -30,7 +33,7 @@ public class STestTextExtract {
     @Test
     public void urlRaw() {
         final Document document = alchemyApi.urlGetRawText("http://www.techcrunch.com/");
-        System.out.println(document);
+        LOGGER.info(document);
     }
 
     /**
@@ -39,7 +42,7 @@ public class STestTextExtract {
     @Test
     public void urlTitle() {
         final Document document = alchemyApi.urlGetTitle("http://www.techcrunch.com/");
-        System.out.println(document);
+        LOGGER.info(document);
     }
 
     /**
@@ -49,7 +52,7 @@ public class STestTextExtract {
     public void htmlClean() {
         final String html = ResourceUtils.toString("data/example.html");
         final Document document = alchemyApi.htmlGetText(html, "http://www.test.com/");
-        System.out.println(document);
+        LOGGER.info(document);
     }
 
     /**
@@ -59,7 +62,7 @@ public class STestTextExtract {
     public void htmlRaw() {
         final String html = ResourceUtils.toString("data/example.html");
         final Document document = alchemyApi.htmlGetRawText(html, "http://www.test.com/");
-        System.out.println(document);
+        LOGGER.info(document);
     }
 
     /**
@@ -69,7 +72,7 @@ public class STestTextExtract {
     public void htmlTitle() {
         final String html = ResourceUtils.toString("data/example.html");
         final Document document = alchemyApi.htmlGetTitle(html, "http://www.test.com/");
-        System.out.println(document);
+        LOGGER.info(document);
     }
 
 }

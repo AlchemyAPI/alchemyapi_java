@@ -604,7 +604,7 @@ public class AlchemyApi {
 
     private Document praseRdf(final String response, final Parameters parameters) {
         final Document document = Jsoup.parse(response, parameters.getEncoding(), Parser.xmlParser());
-                                    System.out.println("RAW: " + response);
+        LOGGER.info("RAW: " + response);
         final Element status = document.select("rdf|RDF > rdf|Description > aapi|ResultStatus").first();
         if (status == null || !status.text().equals("OK")) {
             throw new AlchemyApiException("Error making API call: " + status);
