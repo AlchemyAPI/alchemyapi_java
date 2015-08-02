@@ -43,8 +43,8 @@ public class LanguageParameters extends Parameters {
         this.xPath = xPath;
     }
 
-    public String getParameterString() {
-        String retString = super.getParameterString();
+    public String getUrlQuery() {
+        String retString = super.getUrlQuery();
         try {
             if (sourceText != null) retString += "&sourceText=" + sourceText;
             if (cQuery != null) retString += "&cquery=" + URLEncoder.encode(cQuery, "UTF-8");

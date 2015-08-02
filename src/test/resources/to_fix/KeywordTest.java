@@ -1,6 +1,6 @@
-package com.alchemyapi;
+package to_fix;
 
-import com.alchemyapi.api.AlchemyAPI;
+import com.alchemyapi.api.AlchemyApi;
 
 import org.xml.sax.SAXException;
 import org.w3c.dom.Document;
@@ -13,22 +13,27 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-class ConstraintQueryTest {
-    public static void main(String[] args)
-        throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
+class KeywordTest {
+    public static void main(String[] args) throws IOException, SAXException,
+            ParserConfigurationException, XPathExpressionException {
         // Create an AlchemyAPI object.
-        AlchemyAPI alchemyObj = AlchemyAPI.GetInstanceFromFile("api_key.txt");
+        AlchemyApi alchemyObj = AlchemyApi.GetInstanceFromFile("api_key.txt");
 
-        // Extract first link from an URL.
-        Document doc = alchemyObj.URLGetConstraintQuery("http://microformats.org/wiki/hcard",
-                "1st link");
+        // Extract topic keywords for a web URL.
+        Document doc = alchemyObj.URLGetRankedKeywords("http://www.techcrunch.com/");
         System.out.println(getStringFromDocument(doc));
 
-        // Extract first link from a HTML.
+        // Extract topic keywords for a text string.
+        doc = alchemyObj.TextGetRankedKeywords(
+            "Hello there, my name is Bob Jones.  I live in the United States of America.  " +
+            "Where do you live, Fred?");
+        System.out.println(getStringFromDocument(doc));
+
+        // Load a HTML document to analyze.
         String htmlDoc = getFileContents("data/example.html");
-        doc = alchemyObj.HTMLGetConstraintQuery(htmlDoc, "http://www.test.com/", "1st link");
+
+        // Extract topic keywords for a HTML document.
+        doc = alchemyObj.HTMLGetRankedKeywords(htmlDoc, "http://www.test.com/");
         System.out.println(getStringFromDocument(doc));
     }
 

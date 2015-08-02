@@ -1,8 +1,7 @@
-package com.alchemyapi;
+package to_fix;
 
-import com.alchemyapi.api.*;
+import com.alchemyapi.api.AlchemyApi;
 
-import com.alchemyapi.api.parameters.ImageParameters;
 import org.xml.sax.SAXException;
 import org.w3c.dom.Document;
 import java.io.*;
@@ -14,48 +13,52 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-class ImageTest {
+class LanguageTest {
     public static void main(String[] args)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
         // Create an AlchemyAPI object.
-        AlchemyAPI alchemyObj = AlchemyAPI.GetInstanceFromFile("api_key.txt");
+        AlchemyApi alchemyObj = AlchemyApi.GetInstanceFromFile("api_key.txt");
 
-        // Extract image for a web URL.
-        Document doc = alchemyObj.URLGetImage("http://www.techcrunch.com/");
+        // Detect the language for a web URL.
+        Document doc = alchemyObj.URLGetLanguage("http://news.google.fr/");
         System.out.println(getStringFromDocument(doc));
 
-        doc = alchemyObj.URLGetRankedImageKeywords(
-            "http://farm4.staticflickr.com/3726/11043305726_fdcb7785ec_m.jpg");
+        // Detect the language for a text string (requires at least 100
+        // characters).
+        String htmlDoc = getFileContents("data/example.html");
+        doc = alchemyObj.TextGetLanguage("This is some english language text.  What language do you speak?");
         System.out.println(getStringFromDocument(doc));
 
-        byte[] imageByteArray = readFile("data/cat.jpg");
+        // Load a HTML document to analyze.
+        htmlDoc = getFileContents("data/example.html");
 
-        ImageParameters imageParams = new ImageParameters();
-        imageParams.setImage(imageByteArray);
-        imageParams.setImagePostMode(ImageParameters.RAW);
-        doc = alchemyObj.ImageGetRankedImageKeywords(imageParams);
+        // Detect the language for a HTML document.
+        doc = alchemyObj.HTMLGetLanguage(htmlDoc, "http://www.test.com/");
         System.out.println(getStringFromDocument(doc));
     }
 
     // utility function
-    private static byte[] readFile(String file) throws IOException {
-        // Open file
-        RandomAccessFile f = new RandomAccessFile(new File(file), "r");
+    private static String getFileContents(String filename) throws IOException,
+            FileNotFoundException {
+        File file = new File(filename);
+        StringBuilder contents = new StringBuilder();
+
+        BufferedReader input = new BufferedReader(new FileReader(file));
+
         try {
-            // Get and check length
-            long longlength = f.length();
-            int length = (int) longlength;
-            if (length != longlength)
-                throw new IOException("File size >= 2 GB");
-            // Read file and return data
-            byte[] data = new byte[length];
-            f.readFully(data);
-            return data;
+            String line = null;
+
+            while ((line = input.readLine()) != null) {
+                contents.append(line);
+                contents.append(System.getProperty("line.separator"));
+            }
         } finally {
-            f.close();
+            input.close();
         }
+
+        return contents.toString();
     }
 
     // utility method

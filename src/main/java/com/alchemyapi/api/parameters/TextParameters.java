@@ -21,8 +21,8 @@ public class TextParameters extends Parameters {
         this.extractLinks = extractLinks;
     }
 
-    public String getParameterString() {
-        String retString = super.getParameterString();
+    public String getUrlQuery() {
+        String retString = super.getUrlQuery();
 
         if (useMetaData != null) retString += "&useMetaData=" + (useMetaData ? "1" : "0");
         if (extractLinks != null) retString += "&extractLinks=" + (extractLinks ? "1" : "0");

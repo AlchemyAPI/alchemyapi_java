@@ -1,6 +1,6 @@
-package com.alchemyapi;
+package to_fix;
 
-import com.alchemyapi.api.*;
+import com.alchemyapi.api.AlchemyApi;
 
 import org.xml.sax.SAXException;
 import org.w3c.dom.Document;
@@ -13,29 +13,23 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-class TaxonomyTest {
+class FeedLinksTest {
     public static void main(String[] args)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
         // Create an AlchemyAPI object.
-        AlchemyAPI alchemyObj = AlchemyAPI.GetInstanceFromFile("api_key.txt");
+        AlchemyApi alchemyObj = AlchemyApi.GetInstanceFromFile("api_key.txt");
 
-        // Extract a ranked list of relations for a web URL.
-        Document doc = alchemyObj.URLGetTaxonomy("http://www.techcrunch.com/");
-        System.out.println(getStringFromDocument(doc));
-
-        // Extract a ranked taxonomy from a text string.
-        doc = alchemyObj.TextGetTaxonomy(
-            "Hello there, my name is Bob Jones.  I live in the United States of America.  " +
-            "Where do you live, Fred?");
+        // Extract RSS / ATOM feed links from a web URL.
+        Document doc = alchemyObj.URLGetFeedLinks("http://www.techcrunch.com/");
         System.out.println(getStringFromDocument(doc));
 
         // Load a HTML document to analyze.
         String htmlDoc = getFileContents("data/example.html");
 
-        // Extract a ranked taxonomy from a HTML document.
-        doc = alchemyObj.HTMLGetTaxonomy(htmlDoc, "http://www.test.com/");
+        // Extract RSS / ATOM feed links from a HTML document.
+        doc = alchemyObj.HTMLGetFeedLinks(htmlDoc, "http://www.test.com/");
         System.out.println(getStringFromDocument(doc));
     }
 

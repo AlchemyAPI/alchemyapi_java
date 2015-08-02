@@ -24,8 +24,8 @@ public class TargetedSentimentParameters extends Parameters {
         this.target = target;
     }
 
-    public String getParameterString() {
-        String retString = super.getParameterString();
+    public String getUrlQuery() {
+        String retString = super.getUrlQuery();
         try {
             if (showSourceText != null) retString += "&showSourceText=" + (showSourceText ? "1" : "0");
             if (target != null) retString += "&target=" + URLEncoder.encode(target, "UTF-8");

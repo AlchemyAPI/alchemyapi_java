@@ -160,8 +160,8 @@ public class CombinedParameters extends Parameters {
             this.extract += "," + extractArg;
     }
 
-    public String getParameterString() {
-        String retString = super.getParameterString();
+    public String getUrlQuery() {
+        String retString = super.getUrlQuery();
         try {
             if (extractMode != null) retString += "&extractMode=" + extractMode;
             if (extract != null) retString += "&extract=" + extract;

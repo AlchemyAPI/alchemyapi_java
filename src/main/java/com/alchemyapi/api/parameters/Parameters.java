@@ -1,6 +1,7 @@
 package com.alchemyapi.api.parameters;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.net.URLEncoder;
 
 
@@ -9,17 +10,17 @@ public class Parameters {
     public static final String OUTPUT_XML = "xml";
     public static final String OUTPUT_RDF = "rdf";
 
-    private String url;
+    private URL url;
     private String html;
     private String text;
     private String outputMode = OUTPUT_XML; // TODO make json default
     private String customParameters;
 
-    public String getUrl() {
+    public URL getUrl() {
         return url;
     }
 
-    public void setUrl(String url) {
+    public void setUrl(URL url) {
         this.url = url;
     }
 
@@ -69,10 +70,10 @@ public class Parameters {
         this.customParameters = data.toString();
     }
 
-    public String getParameterString() {
+    public String getUrlQuery() {
         String retString = "";
         try {
-            if (url != null) retString += "&url=" + URLEncoder.encode(url, "UTF-8");
+            if (url != null) retString += "&url=" + URLEncoder.encode(url.toString(), "UTF-8");
             if (html != null) retString += "&html=" + URLEncoder.encode(html, "UTF-8");
             if (text != null) retString += "&text=" + URLEncoder.encode(text, "UTF-8");
             if (customParameters != null) retString += customParameters;

@@ -1,4 +1,4 @@
-package com.alchemyapi.util;
+package com.alchemyapi.helpers;
 
 import org.apache.commons.io.IOUtils;
 

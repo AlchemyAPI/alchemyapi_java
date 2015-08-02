@@ -1,7 +1,8 @@
-package com.alchemyapi;
+package to_fix;
 
-import com.alchemyapi.api.AlchemyAPI;
+import com.alchemyapi.api.*;
 
+import com.alchemyapi.api.parameters.ImageParameters;
 import org.xml.sax.SAXException;
 import org.w3c.dom.Document;
 import java.io.*;
@@ -13,53 +14,48 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-class EntityTest {
+class ImageTest {
     public static void main(String[] args)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
         // Create an AlchemyAPI object.
-        AlchemyAPI alchemyObj = AlchemyAPI.GetInstanceFromFile("api_key.txt");
+        AlchemyApi alchemyObj = AlchemyApi.GetInstanceFromFile("api_key.txt");
 
-        // Extract a ranked list of named entities for a web URL.
-        Document doc = alchemyObj.URLGetRankedNamedEntities("http://www.techcrunch.com/");
+        // Extract image for a web URL.
+        Document doc = alchemyObj.URLGetImage("http://www.techcrunch.com/");
         System.out.println(getStringFromDocument(doc));
 
-        // Extract a ranked list of named entities from a text string.
-        doc = alchemyObj.TextGetRankedNamedEntities(
-            "Hello there, my name is Bob Jones.  I live in the United States of America.  " +
-            "Where do you live, Fred?");
+        doc = alchemyObj.URLGetRankedImageKeywords(
+            "http://farm4.staticflickr.com/3726/11043305726_fdcb7785ec_m.jpg");
         System.out.println(getStringFromDocument(doc));
 
-        // Load a HTML document to analyze.
-        String htmlDoc = getFileContents("data/example.html");
+        byte[] imageByteArray = readFile("data/cat.jpg");
 
-        // Extract a ranked list of named entities from a HTML document.
-        doc = alchemyObj.HTMLGetRankedNamedEntities(htmlDoc, "http://www.test.com/");
+        ImageParameters imageParams = new ImageParameters();
+        imageParams.setImage(imageByteArray);
+        imageParams.setImagePostMode(ImageParameters.RAW);
+        doc = alchemyObj.ImageGetRankedImageKeywords(imageParams);
         System.out.println(getStringFromDocument(doc));
     }
 
     // utility function
-    private static String getFileContents(String filename)
-        throws IOException, FileNotFoundException
-    {
-        File file = new File(filename);
-        StringBuilder contents = new StringBuilder();
-
-        BufferedReader input = new BufferedReader(new FileReader(file));
-
+    private static byte[] readFile(String file) throws IOException {
+        // Open file
+        RandomAccessFile f = new RandomAccessFile(new File(file), "r");
         try {
-            String line = null;
-
-            while ((line = input.readLine()) != null) {
-                contents.append(line);
-                contents.append(System.getProperty("line.separator"));
-            }
+            // Get and check length
+            long longlength = f.length();
+            int length = (int) longlength;
+            if (length != longlength)
+                throw new IOException("File size >= 2 GB");
+            // Read file and return data
+            byte[] data = new byte[length];
+            f.readFully(data);
+            return data;
         } finally {
-            input.close();
+            f.close();
         }
-
-        return contents.toString();
     }
 
     // utility method

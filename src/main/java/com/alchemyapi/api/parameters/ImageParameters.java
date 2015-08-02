@@ -64,8 +64,8 @@ public class ImageParameters extends Parameters {
         this.baseUrl = baseUrl;
     }
 
-    public String getParameterString() {
-        String retString = super.getParameterString();
+    public String getUrlQuery() {
+        String retString = super.getUrlQuery();
         try {
             if (cQuery != null) retString += "&cquery=" + URLEncoder.encode(cQuery, "UTF-8");
             if (xPath != null) retString += "&xpath=" + URLEncoder.encode(xPath, "UTF-8");

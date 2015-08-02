@@ -1,5 +1,6 @@
 package com.alchemyapi.api;
 
+import com.alchemyapi.api.exceptions.AlchemyApiException;
 import com.alchemyapi.api.parameters.CategoryParameters;
 import com.alchemyapi.api.parameters.CombinedParameters;
 import com.alchemyapi.api.parameters.ConceptParameters;
@@ -13,6 +14,7 @@ import com.alchemyapi.api.parameters.RelationParameters;
 import com.alchemyapi.api.parameters.TargetedSentimentParameters;
 import com.alchemyapi.api.parameters.TaxonomyParameters;
 import com.alchemyapi.api.parameters.TextParameters;
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -24,1060 +26,602 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.Charset;
 
-public class AlchemyAPI {
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.length;
+import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 
-    private String _apiKey;
-    private String _requestUri = "http://access.alchemyapi.com/calls/";
+public class AlchemyApi {
 
-    private AlchemyAPI() {
+    private static final Logger LOGGER = Logger.getLogger(AlchemyApi.class);
+
+    private static final String API_URL = "http://{SUB_DOMAIN}.alchemyapi.com/calls/";
+
+    private final AlchemyApiConfiguration configuration;
+
+    public AlchemyApi(final AlchemyApiConfiguration configuration) {
+        if(configuration == null) { throw new AlchemyApiException("Configuration must not be null"); }
+        valididateConfiguration(configuration);
+        LOGGER.info("Loaded Configuration: " + configuration);
+        this.configuration = configuration;
     }
 
-
-    static public AlchemyAPI GetInstanceFromFile(String keyFilename)
-        throws FileNotFoundException, IOException
-    {
-        AlchemyAPI api = new AlchemyAPI();
-        api.LoadAPIKey(keyFilename);
-
-        return api;
+    private static void valididateConfiguration(final AlchemyApiConfiguration configuration) {
+        if(length(configuration.getApiKey()) < 5) { throw new AlchemyApiException("API key must be at least 5 characters"); }
     }
 
-    static public AlchemyAPI GetInstanceFromString(String apiKey)
-    {
-        AlchemyAPI api = new AlchemyAPI();
-        api.SetAPIKey(apiKey);
-
-        return api;
+    public Document urlGetAuthor(final URL url) {
+        return urlGetAuthor(url, new Parameters());
     }
 
-    public void LoadAPIKey(String filename) throws IOException, FileNotFoundException
-    {
-        if (null == filename || 0 == filename.length())
-            throw new IllegalArgumentException("Empty API key file specified.");
-
-        File file = new File(filename);
-        FileInputStream fis = new FileInputStream(file);
-
-        BufferedReader breader = new BufferedReader(new InputStreamReader(fis));
-
-        _apiKey = breader.readLine().replaceAll("\\n", "").replaceAll("\\r", "");
-
-        fis.close();
-        breader.close();
-
-        if (null == _apiKey || _apiKey.length() < 5)
-            throw new IllegalArgumentException("Too short API key.");
-    }
-
-    public void SetAPIKey(String apiKey) {
-        _apiKey = apiKey;
-
-        if (null == _apiKey || _apiKey.length() < 5)
-            throw new IllegalArgumentException("Too short API key.");
-    }
-
-    public void SetAPIHost(String apiHost) {
-        if (null == apiHost || apiHost.length() < 2)
-            throw new IllegalArgumentException("Too short API host.");
-
-        _requestUri = "http://" + apiHost + ".alchemyapi.com/calls/";
-    }
-
-    public Document URLGetAuthor(String url)
-        throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-        return URLGetAuthor(url, new Parameters());
-    }
-
-    public Document URLGetAuthor(String url, Parameters params)
-        throws IOException, SAXException, ParserConfigurationException,
-               XPathExpressionException
-    {
-        CheckURL(url);
-
+    public Document urlGetAuthor(final URL url, final Parameters params) {
         params.setUrl(url);
-
-        return GET("URLGetAuthor", "url", params);
+        return get("URLGetAuthor", "url", params);
     }
 
-    public Document HTMLGetAuthor(String html, String url)
-        throws IOException, SAXException, ParserConfigurationException,
-               XPathExpressionException
-    {
-        return HTMLGetAuthor(html, url, new Parameters());
+    public Document htmlGetAuthor(final String html, final URL url) {
+        return htmlGetAuthor(html, url, new Parameters());
     }
 
-    public Document HTMLGetAuthor(String html, String url,
-			          Parameters params)
-        throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-        CheckHTML(html, url);
-
+    public Document htmlGetAuthor(final String html, final URL url, final Parameters params) {
         params.setHtml(html);
         params.setUrl(url);
-
-        return POST("HTMLGetAuthor", "html", params);
+        return post("HTMLGetAuthor", "html", params);
     }
 
-    public Document URLGetRankedNamedEntities(String url)
-        throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-        return URLGetRankedNamedEntities(url, new NamedEntityParameters());
-    }
-    
-    public Document URLGetRankedNamedEntities(String url, NamedEntityParameters params)
-    throws IOException, SAXException,
-           ParserConfigurationException, XPathExpressionException
-    {
-    	CheckURL(url);
-    	
-    	params.setUrl(url);
-
-    	return GET("URLGetRankedNamedEntities", "url", params);
+    public Document urlGetRankedNamedEntities(final URL url) {
+        return urlGetRankedNamedEntities(url, new NamedEntityParameters());
     }
 
-    public Document HTMLGetRankedNamedEntities(String html, String url)
-        throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-        return HTMLGetRankedNamedEntities(html, url, new NamedEntityParameters());
+    public Document urlGetRankedNamedEntities(final URL url, final NamedEntityParameters params) {
+        params.setUrl(url);
+        return get("URLGetRankedNamedEntities", "url", params);
     }
-    
 
-    public Document HTMLGetRankedNamedEntities(String html, String url, NamedEntityParameters params)
-        throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-        CheckHTML(html, url);
-        
+    public Document htmlGetRankedNamedEntities(final String html, final URL url) {
+        return htmlGetRankedNamedEntities(html, url, new NamedEntityParameters());
+    }
+
+    public Document htmlGetRankedNamedEntities(final String html, final URL url, final NamedEntityParameters params) {
         params.setUrl(url);
         params.setHtml(html);
-
-        return POST("HTMLGetRankedNamedEntities", "html", params);
+        return post("HTMLGetRankedNamedEntities", "html", params);
     }
 
-    public Document TextGetRankedNamedEntities(String text)
-        throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-        return TextGetRankedNamedEntities(text, new NamedEntityParameters());
-    }
-    
-    public Document TextGetRankedNamedEntities(String text, NamedEntityParameters params)
-    throws IOException, SAXException,
-           ParserConfigurationException, XPathExpressionException
-    {
-    	CheckText(text);
-    
-    	params.setText(text);
-
-    	return POST("TextGetRankedNamedEntities", "text", params);
-    }
-    
-    
-
-    public Document URLGetRankedConcepts(String url)
-        throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-        return URLGetRankedConcepts(url, new ConceptParameters());
-    }
-    
-    public Document URLGetRankedConcepts(String url, ConceptParameters params)
-    throws IOException, SAXException,
-           ParserConfigurationException, XPathExpressionException
-    {
-    	CheckURL(url);
-    
-    	params.setUrl(url);
-
-    	return GET("URLGetRankedConcepts", "url", params);
-    }    
-    
-
-    public Document HTMLGetRankedConcepts(String html, String url)
-        throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-        return HTMLGetRankedConcepts(html, url, new ConceptParameters());
-    }
-    
-    public Document HTMLGetRankedConcepts(String html, String url, ConceptParameters params)
-    throws IOException, SAXException,
-           ParserConfigurationException, XPathExpressionException
-	{
-	    CheckHTML(html, url);
-
-	    params.setUrl(url);
-	    params.setHtml(html);
-	
-	    return POST("HTMLGetRankedConcepts", "html", params);
-	}
-
-    public Document TextGetRankedConcepts(String text) throws IOException, SAXException,
-            ParserConfigurationException, XPathExpressionException {
-        return TextGetRankedConcepts(text, new ConceptParameters());
-    }
-    
-    public Document TextGetRankedConcepts(String text, ConceptParameters params) throws IOException, SAXException,
-    ParserConfigurationException, XPathExpressionException 
-    {
-		CheckText(text);
-		
-		params.setText(text);
-		
-		return POST("TextGetRankedConcepts", "text", params);
-	}
-    
-    
-
-    public Document URLGetRankedKeywords(String url)
-        throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-        return URLGetRankedKeywords(url, new KeywordParameters());
-    }
-    
-    public Document URLGetRankedKeywords(String url, KeywordParameters params)
-    throws IOException, SAXException,
-           ParserConfigurationException, XPathExpressionException
-    {
-    	CheckURL(url);
-    
-    	params.setUrl(url);
-
-    	return GET("URLGetRankedKeywords", "url", params);
-    }    
-    
-
-    public Document HTMLGetRankedKeywords(String html, String url)
-        throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-        return HTMLGetRankedKeywords(html, url, new KeywordParameters());
-    }
-    
-    public Document HTMLGetRankedKeywords(String html, String url, KeywordParameters params)
-    throws IOException, SAXException,
-           ParserConfigurationException, XPathExpressionException
-	{
-	    CheckHTML(html, url);
-
-	    params.setUrl(url);
-	    params.setHtml(html);
-	
-	    return POST("HTMLGetRankedKeywords", "html", params);
-	}
-
-    public Document TextGetRankedKeywords(String text) throws IOException, SAXException,
-            ParserConfigurationException, XPathExpressionException {
-        return TextGetRankedKeywords(text, new KeywordParameters());
-    }
-    
-    public Document TextGetRankedKeywords(String text, KeywordParameters params) throws IOException, SAXException,
-    ParserConfigurationException, XPathExpressionException 
-    {
-		CheckText(text);
-		
-		params.setText(text);
-		
-		return POST("TextGetRankedKeywords", "text", params);
-	}
-
-    public Document URLGetLanguage(String url)
-        throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-        return URLGetLanguage(url, new LanguageParameters());
-    }
-    
-    public Document URLGetLanguage(String url, LanguageParameters params)
-    throws IOException, SAXException,
-           ParserConfigurationException, XPathExpressionException
-	{
-	    CheckURL(url);
-	    
-	    params.setUrl(url);
-	
-	    return GET("URLGetLanguage", "url", params);
-	}
-
-    public Document HTMLGetLanguage(String html, String url)
-        throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-        return HTMLGetLanguage(html, url, new LanguageParameters());
-    }
-    
-    public Document HTMLGetLanguage(String html, String url, LanguageParameters params)
-    throws IOException, SAXException,
-           ParserConfigurationException, XPathExpressionException
-	{
-	    CheckHTML(html, url);
-	    
-	    params.setUrl(url);
-	    params.setHtml(html);
-	
-	    return POST("HTMLGetLanguage", "html", params);
-	}
-
-    public Document TextGetLanguage(String text)
-        throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-        return TextGetLanguage(text, new LanguageParameters());
-    }
-    
-    public Document TextGetLanguage(String text, LanguageParameters params)
-    throws IOException, SAXException,
-           ParserConfigurationException, XPathExpressionException
-	{
-	    CheckText(text);
-
-	    params.setText(text);
-	
-	    return POST("TextGetLanguage", "text", params);
-	}
-
-    public Document URLGetCategory(String url)
-        throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-        return URLGetCategory(url, new CategoryParameters());
-    }
-    
-    public Document URLGetCategory(String url, CategoryParameters params)
-    throws IOException, SAXException,
-           ParserConfigurationException, XPathExpressionException
-	{
-	    CheckURL(url);
-
-	    params.setUrl(url);
-	
-	    return GET("URLGetCategory", "url", params);
-	}
-
-    public Document HTMLGetCategory(String html, String url)
-        throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-        return HTMLGetCategory(html, url, new CategoryParameters());
-    }
-    
-    public Document HTMLGetCategory(String html, String url, CategoryParameters params)
-    throws IOException, SAXException,
-           ParserConfigurationException, XPathExpressionException
-	{
-	    CheckHTML(html, url);
-	    
-	    params.setUrl(url);
-	    params.setHtml(html);
-	
-	    return POST("HTMLGetCategory", "html", params);
-	}
-
-    public Document TextGetCategory(String text)
-        throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-        return TextGetCategory(text, new TextParameters());
-    }
-    
-    public Document TextGetCategory(String text, TextParameters params)
-    throws IOException, SAXException,
-           ParserConfigurationException, XPathExpressionException
-	{
-	    CheckText(text);
-	    
-	    params.setText(text);
-	
-	    return POST("TextGetCategory", "text", params);
-	}
-
-    public Document URLGetText(String url)
-        throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-        return URLGetText(url, new TextParameters());
-    }
-    
-    public Document URLGetText(String url, TextParameters params)
-    throws IOException, SAXException,
-           ParserConfigurationException, XPathExpressionException
-	{
-	    CheckURL(url);
-	    
-	    params.setUrl(url);
-	
-	    return GET("URLGetText", "url", params);
-	}
-
-    public Document HTMLGetText(String html, String url)
-        throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-        return HTMLGetText(html, url, new TextParameters());
-    }
-    
-    public Document HTMLGetText(String html, String url, TextParameters params)
-    throws IOException, SAXException,
-           ParserConfigurationException, XPathExpressionException
-	{
-	    CheckHTML(html, url);
-	    
-	    params.setUrl(url);
-	    params.setHtml(html);
-	
-	    return POST("HTMLGetText", "html", params);
-	}
-
-    public Document URLGetRawText(String url)
-        throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-        return URLGetRawText(url, new Parameters());
-    }
-    
-    public Document URLGetRawText(String url, Parameters params)
-    throws IOException, SAXException,
-           ParserConfigurationException, XPathExpressionException
-	{
-	    CheckURL(url);
-
-	    params.setUrl(url);
-	
-	    return GET("URLGetRawText", "url", params);
-	}
-
-    public Document HTMLGetRawText(String html, String url)
-        throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-        return HTMLGetRawText(html, url, new Parameters());
-    }
-    
-    public Document HTMLGetRawText(String html, String url, Parameters params)
-    throws IOException, SAXException,
-           ParserConfigurationException, XPathExpressionException
-	{
-	    CheckHTML(html, url);
-
-	    params.setUrl(url);
-	    params.setHtml(html);
-	
-	    return POST("HTMLGetRawText", "html", params);
-	}
-
-    public Document URLGetTitle(String url)
-        throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-        return URLGetTitle(url, new Parameters());
-    }
-    
-    public Document URLGetTitle(String url, Parameters params)
-    throws IOException, SAXException,
-           ParserConfigurationException, XPathExpressionException
-	{
-	    CheckURL(url);
-	    
-	    params.setUrl(url);
-	
-	    return GET("URLGetTitle", "url", params);
-	}
-
-    public Document HTMLGetTitle(String html, String url)
-        throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-        return HTMLGetTitle(html, url, new Parameters());
-    }
-    
-    public Document HTMLGetTitle(String html, String url, Parameters params)
-    throws IOException, SAXException,
-           ParserConfigurationException, XPathExpressionException
-	{
-	    CheckHTML(html, url);
-	    
-	    params.setUrl(url);
-	    params.setHtml(html);
-	
-	    return POST("HTMLGetTitle", "html", params);
-	}
-
-    public Document URLGetFeedLinks(String url)
-        throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-        return URLGetFeedLinks(url, new Parameters());
-    }
-    
-    public Document URLGetFeedLinks(String url, Parameters params)
-    throws IOException, SAXException,
-           ParserConfigurationException, XPathExpressionException
-	{
-	    CheckURL(url);
-	    
-	    params.setUrl(url);
-	
-	    return GET("URLGetFeedLinks", "url", params);
-	}
-
-    public Document HTMLGetFeedLinks(String html, String url)
-        throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-        return HTMLGetFeedLinks(html, url, new Parameters());
-    }
-    
-    public Document HTMLGetFeedLinks(String html, String url, Parameters params)
-    throws IOException, SAXException,
-           ParserConfigurationException, XPathExpressionException
-	{
-	    CheckHTML(html, url);
-	    
-	    params.setUrl(url);
-	    params.setHtml(html);
-	
-	    return POST("HTMLGetFeedLinks", "html", params);
-	}
-
-    public Document URLGetMicroformats(String url)
-        throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-        return URLGetMicroformats(url, new Parameters());
-    }
-    
-    public Document URLGetMicroformats(String url, Parameters params)
-    throws IOException, SAXException,
-           ParserConfigurationException, XPathExpressionException
-	{
-	    CheckURL(url);
-
-	    params.setUrl(url);
-	
-	    return GET("URLGetMicroformatData", "url", params);
-	}
-
-    public Document HTMLGetMicroformats(String html, String url)
-        throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-        return HTMLGetMicroformats(html, url, new Parameters());
-    }
-    
-    public Document HTMLGetMicroformats(String html, String url, Parameters params)
-    throws IOException, SAXException,
-           ParserConfigurationException, XPathExpressionException
-	{
-	    CheckHTML(html, url);
-	    
-	    params.setUrl(url);
-	    params.setHtml(html);
-	
-	    return POST("HTMLGetMicroformatData", "html", params);
-	}
-
-    public Document URLGetConstraintQuery(String url, String query)
-        throws IOException, XPathExpressionException,
-               SAXException, ParserConfigurationException
-    {
-        return URLGetConstraintQuery(url, query, new ConstraintQueryParameters());
-    }
-    
-    public Document URLGetConstraintQuery(String url, String query, ConstraintQueryParameters params)
-    throws IOException, XPathExpressionException,
-           SAXException, ParserConfigurationException
-	{
-	    CheckURL(url);
-	    if (null == query || query.length() < 2)
-	        throw new IllegalArgumentException("Invalid constraint query specified");
-	    
-	    params.setUrl(url);
-	    params.setCQuery(query);
-	
-	    return POST("URLGetConstraintQuery", "url", params);
-	}
-
-
-    public Document HTMLGetConstraintQuery(String html, String url, String query)
-        throws IOException, XPathExpressionException,
-               SAXException, ParserConfigurationException
-    {
-        return HTMLGetConstraintQuery(html, url, query, new ConstraintQueryParameters());
-    }
-    
-    public Document HTMLGetConstraintQuery(String html, String url, String query, ConstraintQueryParameters params)
-    throws IOException, XPathExpressionException,
-           SAXException, ParserConfigurationException
-	{
-	    CheckHTML(html, url);
-	    if (null == query || query.length() < 2)
-	        throw new IllegalArgumentException("Invalid constraint query specified");
-
-	    params.setUrl(url);
-	    params.setHtml(html);
-	    params.setCQuery(query);
-	
-	    return POST("HTMLGetConstraintQuery", "html", params);
-	}
-	
-	public Document URLGetTextSentiment(String url)
-        throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-        return URLGetTextSentiment(url, new Parameters());
-    }
-    
-    public Document URLGetTextSentiment(String url, Parameters params)
-    throws IOException, SAXException,
-           ParserConfigurationException, XPathExpressionException
-    {
-    	CheckURL(url);
-    
-    	params.setUrl(url);
-
-    	return GET("URLGetTextSentiment", "url", params);
-    }    
-    
-
-    public Document HTMLGetTextSentiment(String html, String url)
-        throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-        return HTMLGetTextSentiment(html, url, new Parameters());
-    }
-    
-    public Document HTMLGetTextSentiment(String html, String url, Parameters params)
-        throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-        CheckHTML(html, url);
-
-        params.setUrl(url);
-        params.setHtml(html);
-	
-        return POST("HTMLGetTextSentiment", "html", params);
+    public Document textGetRankedNamedEntities(final String text) {
+        return textGetRankedNamedEntities(text, new NamedEntityParameters());
     }
 
-    public Document TextGetTextSentiment(String text)
-        throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-        return TextGetTextSentiment(text, new Parameters());
-    }
-    
-    public Document TextGetTextSentiment(String text, Parameters params)
-        throws IOException, SAXException,
-        ParserConfigurationException, XPathExpressionException 
-    {
-        CheckText(text);
-		
+    public Document textGetRankedNamedEntities(final String text, final NamedEntityParameters params) {
         params.setText(text);
-		
-        return POST("TextGetTextSentiment", "text", params);
-    }
-	
-	//------------------
-	
-    public Document URLGetTargetedSentiment(String url, String target)
-        throws IOException, SAXException, ParserConfigurationException,
-               XPathExpressionException
-    {
-        return URLGetTargetedSentiment(url, target,
-                                       new TargetedSentimentParameters());
+        return post("TextGetRankedNamedEntities", "text", params);
     }
 
-    public Document URLGetTargetedSentiment(String url, String target,
-                                            TargetedSentimentParameters params)
-        throws IOException, SAXException, ParserConfigurationException,
-               XPathExpressionException
-    {
-        CheckURL(url);
-        CheckText(target);
+    public Document urlGetRankedConcepts(final URL url) {
+        return urlGetRankedConcepts(url, new ConceptParameters());
+    }
 
+    public Document urlGetRankedConcepts(final URL url, final ConceptParameters params) {
+        params.setUrl(url);
+        return get("URLGetRankedConcepts", "url", params);
+    }
+
+    public Document htmlGetRankedConcepts(final String html, final URL url) {
+        return htmlGetRankedConcepts(html, url, new ConceptParameters());
+    }
+
+    public Document htmlGetRankedConcepts(final String html, final URL url, final ConceptParameters params) {
+        params.setUrl(url);
+        params.setHtml(html);
+        return post("HTMLGetRankedConcepts", "html", params);
+    }
+
+    public Document textGetRankedConcepts(final String text) {
+        return textGetRankedConcepts(text, new ConceptParameters());
+    }
+
+    public Document textGetRankedConcepts(final String text, final ConceptParameters params) {
+        params.setText(text);
+        return post("TextGetRankedConcepts", "text", params);
+    }
+
+    public Document urlGetRankedKeywords(final URL url) {
+        return urlGetRankedKeywords(url, new KeywordParameters());
+    }
+
+    public Document urlGetRankedKeywords(final URL url, final KeywordParameters params) {
+        params.setUrl(url);
+        return get("URLGetRankedKeywords", "url", params);
+    }
+
+    public Document htmlGetRankedKeywords(final String html, final URL url) {
+        return htmlGetRankedKeywords(html, url, new KeywordParameters());
+    }
+
+    public Document htmlGetRankedKeywords(final String html, final URL url, final KeywordParameters params) {
+        params.setUrl(url);
+        params.setHtml(html);
+        return post("HTMLGetRankedKeywords", "html", params);
+    }
+
+    public Document textGetRankedKeywords(final String text) throws IOException, SAXException,
+            ParserConfigurationException, XPathExpressionException {
+        return textGetRankedKeywords(text, new KeywordParameters());
+    }
+
+    public Document textGetRankedKeywords(final String text, final KeywordParameters params) {
+        params.setText(text);
+        return post("TextGetRankedKeywords", "text", params);
+    }
+
+    public Document urlGetLanguage(final URL url) {
+        return urlGetLanguage(url, new LanguageParameters());
+    }
+
+    public Document urlGetLanguage(final URL url, final LanguageParameters params) {
+        params.setUrl(url);
+        return get("URLGetLanguage", "url", params);
+    }
+
+    public Document htmlGetLanguage(final String html, final URL url) {
+        return htmlGetLanguage(html, url, new LanguageParameters());
+    }
+
+    public Document htmlGetLanguage(final String html, final URL url, final LanguageParameters params) {
+        params.setUrl(url);
+        params.setHtml(html);
+        return post("HTMLGetLanguage", "html", params);
+    }
+
+    public Document textGetLanguage(final String text) {
+        return textGetLanguage(text, new LanguageParameters());
+    }
+
+    public Document textGetLanguage(final String text, final LanguageParameters params) {
+        params.setText(text);
+        return post("TextGetLanguage", "text", params);
+    }
+
+    public Document urlGetCategory(final URL url) {
+        return urlGetCategory(url, new CategoryParameters());
+    }
+
+    public Document urlGetCategory(final URL url, final CategoryParameters params) {
+        params.setUrl(url);
+        return get("URLGetCategory", "url", params);
+    }
+
+    public Document htmlGetCategory(final String html, URL url) {
+        return htmlGetCategory(html, url, new CategoryParameters());
+    }
+
+    public Document htmlGetCategory(final String html, final URL url, final CategoryParameters params) {
+        params.setUrl(url);
+        params.setHtml(html);
+        return post("HTMLGetCategory", "html", params);
+    }
+
+    public Document textGetCategory(final String text) {
+        return textGetCategory(text, new TextParameters());
+    }
+
+    public Document textGetCategory(final String text, final TextParameters params) {
+        params.setText(text);
+        return post("TextGetCategory", "text", params);
+    }
+
+    public Document urlGetText(final URL url) {
+        return urlGetText(url, new TextParameters());
+    }
+
+    public Document urlGetText(final URL url, final TextParameters params) {
+        params.setUrl(url);
+        return get("URLGetText", "url", params);
+    }
+
+    public Document htmlGetText(final String html, final URL url) {
+        return htmlGetText(html, url, new TextParameters());
+    }
+
+    public Document htmlGetText(final String html, final URL url, final TextParameters params) {
+        params.setUrl(url);
+        params.setHtml(html);
+        return post("HTMLGetText", "html", params);
+    }
+
+    public Document urlGetRawText(final URL url) {
+        return urlGetRawText(url, new Parameters());
+    }
+
+    public Document urlGetRawText(final URL url, final Parameters params) {
+        params.setUrl(url);
+        return get("URLGetRawText", "url", params);
+    }
+
+    public Document htmlGetRawText(final String html, final URL url) {
+        return htmlGetRawText(html, url, new Parameters());
+    }
+
+    public Document htmlGetRawText(final String html, final URL url, final Parameters params) {
+        params.setUrl(url);
+        params.setHtml(html);
+        return post("HTMLGetRawText", "html", params);
+    }
+
+    public Document urlGetTitle(final URL url) {
+        return urlGetTitle(url, new Parameters());
+    }
+
+    public Document urlGetTitle(final URL url, final Parameters params) {
+        params.setUrl(url);
+        return get("URLGetTitle", "url", params);
+    }
+
+    public Document htmlGetTitle(final String html, final URL url) {
+        return htmlGetTitle(html, url, new Parameters());
+    }
+
+    public Document htmlGetTitle(final String html, final URL url, final Parameters params) {
+        params.setUrl(url);
+        params.setHtml(html);
+        return post("HTMLGetTitle", "html", params);
+    }
+
+    public Document urlGetFeedLinks(final URL url) {
+        return urlGetFeedLinks(url, new Parameters());
+    }
+
+    public Document urlGetFeedLinks(final URL url, final Parameters params) {
+        params.setUrl(url);
+        return get("URLGetFeedLinks", "url", params);
+    }
+
+    public Document htmlGetFeedLinks(final String html, final URL url) {
+        return htmlGetFeedLinks(html, url, new Parameters());
+    }
+
+    public Document htmlGetFeedLinks(final String html, final URL url, final Parameters params) {
+        params.setUrl(url);
+        params.setHtml(html);
+        return post("HTMLGetFeedLinks", "html", params);
+    }
+
+    public Document urlGetMicroformats(final URL url) {
+        return urlGetMicroformats(url, new Parameters());
+    }
+
+    public Document urlGetMicroformats(final URL url, final Parameters params) {
+        params.setUrl(url);
+        return get("URLGetMicroformatData", "url", params);
+    }
+
+    public Document htmlGetMicroformats(final String html, final URL url) {
+        return htmlGetMicroformats(html, url, new Parameters());
+    }
+
+    public Document htmlGetMicroformats(final String html, final URL url, final Parameters params) {
+        params.setUrl(url);
+        params.setHtml(html);
+        return post("HTMLGetMicroformatData", "html", params);
+    }
+
+    public Document urlGetConstraintQuery(final URL url, final String query) {
+        return urlGetConstraintQuery(url, query, new ConstraintQueryParameters());
+    }
+
+    public Document urlGetConstraintQuery(final URL url, final String query, final ConstraintQueryParameters params) {
+        if(trimToEmpty(query).length() < 2) {
+            throw new AlchemyApiException("Constraint query must be at least 2 characters long");
+        }
+        params.setUrl(url);
+        params.setCQuery(query);
+        return post("URLGetConstraintQuery", "url", params);
+    }
+
+
+    public Document htmlGetConstraintQuery(final String html, final URL url, final String query) {
+        return htmlGetConstraintQuery(html, url, query, new ConstraintQueryParameters());
+    }
+
+    public Document htmlGetConstraintQuery(final String html, URL url, final String query, final ConstraintQueryParameters params) {
+        if(trimToEmpty(query).length() < 2) {
+            throw new AlchemyApiException("Constraint query must be at least 2 characters long");
+        }
+        params.setUrl(url);
+        params.setHtml(html);
+        params.setCQuery(query);
+        return post("HTMLGetConstraintQuery", "html", params);
+    }
+
+    public Document urlGetTextSentiment(final URL url) {
+        return urlGetTextSentiment(url, new Parameters());
+    }
+
+    public Document urlGetTextSentiment(final URL url, final Parameters params) {
+        params.setUrl(url);
+        return get("URLGetTextSentiment", "url", params);
+    }
+
+    public Document htmlGetTextSentiment(final String html, final URL url) {
+        return htmlGetTextSentiment(html, url, new Parameters());
+    }
+
+    public Document htmlGetTextSentiment(final String html, URL url, final Parameters params) {
+        params.setUrl(url);
+        params.setHtml(html);
+        return post("HTMLGetTextSentiment", "html", params);
+    }
+
+    public Document textGetTextSentiment(final String text) {
+        return textGetTextSentiment(text, new Parameters());
+    }
+
+    public Document textGetTextSentiment(final String text, final Parameters params) {
+        params.setText(text);
+        return post("TextGetTextSentiment", "text", params);
+    }
+
+    public Document urlGetTargetedSentiment(final URL url, final String target) {
+        return urlGetTargetedSentiment(url, target, new TargetedSentimentParameters());
+    }
+
+    public Document urlGetTargetedSentiment(final URL url, final String target, final TargetedSentimentParameters params) {
         params.setUrl(url);
         params.setTarget(target);
-
-        return GET("URLGetTargetedSentiment", "url", params);
-    }
-	
-    public Document HTMLGetTargetedSentiment(String html, String url, String target)
-        throws IOException, SAXException, ParserConfigurationException,
-               XPathExpressionException
-    {
-        return HTMLGetTargetedSentiment(html, url, target,
-                                        new TargetedSentimentParameters());
+        return get("URLGetTargetedSentiment", "url", params);
     }
 
-    public Document HTMLGetTargetedSentiment(String html, String url, String target,
-                                             TargetedSentimentParameters params)
-        throws IOException, SAXException, ParserConfigurationException,
-               XPathExpressionException
-    {
-        CheckHTML(html, url);
-        CheckText(target);
-		
+    public Document htmlGetTargetedSentiment(final String html, final URL url, final String target) {
+        return htmlGetTargetedSentiment(html, url, target, new TargetedSentimentParameters());
+    }
+
+    public Document htmlGetTargetedSentiment(final String html, final URL url, final String target, final TargetedSentimentParameters params) {
         params.setHtml(html);
         params.setUrl(url);
         params.setTarget(target);
-
-        return POST("HTMLGetTargetedSentiment", "html", params);
-    }
-	
-    public Document TextGetTargetedSentiment(String text, String target)
-        throws IOException, SAXException, ParserConfigurationException,
-               XPathExpressionException
-    {
-        return TextGetTargetedSentiment(text, target,
-                                        new TargetedSentimentParameters());
+        return post("HTMLGetTargetedSentiment", "html", params);
     }
 
-    public Document TextGetTargetedSentiment(String text, String target,
-                                             TargetedSentimentParameters params)
-        throws IOException, SAXException, ParserConfigurationException,
-	       XPathExpressionException
-    {
-        CheckText(text);
-        CheckText(target);
+    public Document textGetTargetedSentiment(final String text, final String target) {
+        return textGetTargetedSentiment(text, target, new TargetedSentimentParameters());
+    }
 
+    public Document textGetTargetedSentiment(final String text, final String target, final TargetedSentimentParameters params) {
         params.setText(text);
         params.setTarget(target);
-
-        return POST("TextGetTargetedSentiment", "text", params);
+        return post("TextGetTargetedSentiment", "text", params);
     }
 
-	//------------------
-	
-    public Document URLGetRelations(String url) throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-        return URLGetRelations(url, new RelationParameters());
+    public Document urlGetRelations(final URL url) {
+        return urlGetRelations(url, new RelationParameters());
     }
-    
-    public Document URLGetRelations(String url, RelationParameters params)
-    throws IOException, SAXException,
-           ParserConfigurationException, XPathExpressionException
-	{
-	    CheckURL(url);
 
-	    params.setUrl(url);
-	
-	    return GET("URLGetRelations", "url", params);
-	}
+    public Document urlGetRelations(final URL url, final RelationParameters params) {
+        params.setUrl(url);
+        return get("URLGetRelations", "url", params);
+    }
 
-    public Document HTMLGetRelations(String html, String url)
-        throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
+    public Document HTMLGetRelations(final String html, final URL url) {
         return HTMLGetRelations(html, url, new RelationParameters());
     }
-    
-    public Document HTMLGetRelations(String html, String url, RelationParameters params)
-    throws IOException, SAXException,
-           ParserConfigurationException, XPathExpressionException
-	{
-	    CheckHTML(html, url);
-	    
-	    params.setUrl(url);
-	    params.setHtml(html);
-	
-	    return POST("HTMLGetRelations", "html", params);
-	}
 
-    public Document TextGetRelations(String text)
-        throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-        return TextGetRelations(text, new RelationParameters());
-    }
-    
-    public Document TextGetRelations(String text, RelationParameters params)
-    throws IOException, SAXException,
-           ParserConfigurationException, XPathExpressionException
-	{
-	    CheckText(text);
-	    
-	    params.setText(text);
-	
-	    return POST("TextGetRelations", "text", params);
-	}
-
-	//------------------
-	
-    public Document URLGetCombined(String url) throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-	CombinedParameters params = new CombinedParameters();
-	params.setExtractAll();
-        return URLGetCombined(url, params);
-    }
-    
-    public Document URLGetCombined(String url, CombinedParameters params)
-    throws IOException, SAXException,
-           ParserConfigurationException, XPathExpressionException
-	{
-	    CheckURL(url);
-
-	    params.setUrl(url);
-	
-	    return GET("URLGetCombinedData", "url", params);
-	}
-
-    public Document TextGetCombined(String text)
-        throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-	CombinedParameters params = new CombinedParameters();
-	params.setExtractAll();
-        return TextGetCombined(text, params);
-    }
-    
-    public Document TextGetCombined(String text, CombinedParameters params)
-    throws IOException, SAXException,
-           ParserConfigurationException, XPathExpressionException
-	{
-	    CheckText(text);
-	    
-	    params.setText(text);
-	
-	    return POST("TextGetCombinedData", "text", params);
-	}
-    
-	//------------------
-	
-    public Document URLGetTaxonomy(String url) throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-        return URLGetTaxonomy(url, new TaxonomyParameters());
-    }
-    
-    public Document URLGetTaxonomy(String url, TaxonomyParameters params)
-    throws IOException, SAXException,
-           ParserConfigurationException, XPathExpressionException
-	{
-	    CheckURL(url);
-
-	    params.setUrl(url);
-	
-	    return GET("URLGetRankedTaxonomy", "url", params);
-	}
-
-    public Document HTMLGetTaxonomy(String html, String url)
-        throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-        return HTMLGetTaxonomy(html, url, new TaxonomyParameters());
-    }
-    
-    public Document HTMLGetTaxonomy(String html, String url, TaxonomyParameters params)
-    throws IOException, SAXException,
-           ParserConfigurationException, XPathExpressionException
-	{
-	    CheckHTML(html, url);
-	    
-	    params.setUrl(url);
-	    params.setHtml(html);
-	
-	    return POST("HTMLGetRankedTaxonomy", "html", params);
-	}
-
-    public Document TextGetTaxonomy(String text)
-        throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-        return TextGetTaxonomy(text, new TaxonomyParameters());
-    }
-    
-    public Document TextGetTaxonomy(String text, TaxonomyParameters params)
-    throws IOException, SAXException,
-           ParserConfigurationException, XPathExpressionException
-	{
-	    CheckText(text);
-	    
-	    params.setText(text);
-	
-	    return POST("TextGetRankedTaxonomy", "text", params);
-	}
-
-	//------------------
-	
-    public Document URLGetImage(String url) throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-        return URLGetImage(url, new ImageParameters());
-    }
-    
-    public Document URLGetImage(String url, ImageParameters params)
-    throws IOException, SAXException,
-           ParserConfigurationException, XPathExpressionException
-	{
-	    CheckURL(url);
-
-	    params.setUrl(url);
-	
-	    return GET("URLGetImage", "url", params);
-	}
-
-    public Document URLGetRankedImageKeywords(String url) throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-        return URLGetRankedImageKeywords(url, new ImageParameters());
-    }
-    
-    public Document URLGetRankedImageKeywords(String url, ImageParameters params)
-    throws IOException, SAXException,
-           ParserConfigurationException, XPathExpressionException
-    {
-        CheckURL(url);
-
+    public Document HTMLGetRelations(final String html, final URL url, final RelationParameters params) {
         params.setUrl(url);
-    
-        return GET("URLGetRankedImageKeywords", "url", params);
+        params.setHtml(html);
+        return post("HTMLGetRelations", "html", params);
     }
 
-    public Document ImageGetRankedImageKeywords(ImageParameters params)
-    throws IOException, SAXException,
-           ParserConfigurationException, XPathExpressionException
-    {
-        URL url = new URL(_requestUri + "image/ImageGetRankedImageKeywords?" + 
-            "apikey=" + this._apiKey + params.getParameterString());
-        System.out.println(url.toString());
-
-        HttpURLConnection handle = (HttpURLConnection) url.openConnection();
-        handle.setDoOutput(true);
-
-        byte[] image = params.getImage();
-        handle.addRequestProperty("Content-Length", Integer.toString(image.length));
-
-        DataOutputStream ostream = new DataOutputStream(handle.getOutputStream());
-        ostream.write(image);
-        ostream.close();
-
-        return doRequest(handle, params.getOutputMode());
+    public Document textGetRelations(final String text) {
+        return textGetRelations(text, new RelationParameters());
     }
 
-    private void CheckHTML(String html, String url) {
-        if (null == html || html.length() < 5)
-            throw new IllegalArgumentException("Enter a HTML document to analyze.");
-
-        if (null == url || url.length() < 10)
-            throw new IllegalArgumentException("Enter an URL to analyze.");
+    public Document textGetRelations(final String text, final RelationParameters params) {
+        params.setText(text);
+        return post("TextGetRelations", "text", params);
     }
 
-    private void CheckText(String text) {
-        if (null == text )
-            throw new IllegalArgumentException("Enter some text to analyze.");
+    public Document urlGetCombined(final URL url) {
+        final CombinedParameters params = new CombinedParameters();
+        params.setExtractAll();
+        return urlGetCombined(url, params);
     }
 
-    private void CheckURL(String url) {
-        if (null == url || url.length() < 10)
-            throw new IllegalArgumentException("Enter an URL to analyze.");
-    }
-    
-    private Document GET(String callName, String callPrefix, Parameters params)
-    throws IOException, SAXException,
-           ParserConfigurationException, XPathExpressionException
-	{
-	    StringBuilder uri = new StringBuilder();
-	    uri.append(_requestUri).append(callPrefix).append('/').append(callName)
-	       .append('?').append("apikey=").append(this._apiKey);
-	    uri.append(params.getParameterString());
-	
-	    URL url = new URL(uri.toString());
-	    HttpURLConnection handle = (HttpURLConnection) url.openConnection();
-	    handle.setDoOutput(true);
-	
-	    return doRequest(handle, params.getOutputMode());
-	}
-
-    private Document POST(String callName, String callPrefix, Parameters params)
-        throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-        URL url = new URL(_requestUri + callPrefix + "/" + callName);
-
-        HttpURLConnection handle = (HttpURLConnection) url.openConnection();
-        handle.setDoOutput(true);
-
-        StringBuilder data = new StringBuilder();
-
-        data.append("apikey=").append(this._apiKey);
-        data.append(params.getParameterString());
-
-        handle.addRequestProperty("Content-Length", Integer.toString(data.length()));
-
-        DataOutputStream ostream = new DataOutputStream(handle.getOutputStream());
-        ostream.write(data.toString().getBytes());
-        ostream.close();
-
-        return doRequest(handle, params.getOutputMode());
+    public Document urlGetCombined(final URL url, final CombinedParameters params) {
+        params.setUrl(url);
+        return get("URLGetCombinedData", "url", params);
     }
 
-    // TODO currently hard-coded to handle xml, create xml/json adapter based on request
+    public Document textGetCombined(final String text) {
+        final CombinedParameters params = new CombinedParameters();
+        params.setExtractAll();
+        return textGetCombined(text, params);
+    }
+
+    public Document textGetCombined(final String text, final CombinedParameters params) {
+        params.setText(text);
+        return post("TextGetCombinedData", "text", params);
+    }
+
+    public Document urlGetTaxonomy(final URL url) {
+        return urlGetTaxonomy(url, new TaxonomyParameters());
+    }
+
+    public Document urlGetTaxonomy(final URL url, final TaxonomyParameters params) {
+        params.setUrl(url);
+        return get("URLGetRankedTaxonomy", "url", params);
+    }
+
+    public Document htmlGetTaxonomy(final String html, final URL url) {
+        return htmlGetTaxonomy(html, url, new TaxonomyParameters());
+    }
+
+    public Document htmlGetTaxonomy(final String html, final URL url, final TaxonomyParameters params) {
+        params.setUrl(url);
+        params.setHtml(html);
+        return post("HTMLGetRankedTaxonomy", "html", params);
+    }
+
+    public Document textGetTaxonomy(final String text) {
+        return textGetTaxonomy(text, new TaxonomyParameters());
+    }
+
+    public Document textGetTaxonomy(final String text, final TaxonomyParameters params) {
+        params.setText(text);
+        return post("TextGetRankedTaxonomy", "text", params);
+    }
+
+    public Document urlGetImage(final URL url) {
+        return urlGetImage(url, new ImageParameters());
+    }
+
+    public Document urlGetImage(final URL url, final ImageParameters params) {
+        params.setUrl(url);
+        return get("URLGetImage", "url", params);
+    }
+
+    public Document urlGetRankedImageKeywords(final URL url) {
+        return urlGetRankedImageKeywords(url, new ImageParameters());
+    }
+
+    public Document urlGetRankedImageKeywords(final URL url, final ImageParameters params) {
+        params.setUrl(url);
+        return get("URLGetRankedImageKeywords", "url", params);
+    }
+
+    public Document imageGetRankedImageKeywords(final ImageParameters params) {
+        try {
+            final String urlQuery = "?apikey=" + this.configuration.getApiKey() + params.getUrlQuery();
+            final URL url = new URL(buildBaseApiUrl() + "image/ImageGetRankedImageKeywords" + urlQuery);
+
+            final HttpURLConnection handle = (HttpURLConnection) url.openConnection();
+            handle.setDoOutput(true);
+
+            final byte[] image = params.getImage();
+            handle.addRequestProperty("Content-Length", Integer.toString(image.length));
+
+            final DataOutputStream outputStream = new DataOutputStream(handle.getOutputStream());
+            outputStream.write(image);
+            outputStream.close();
+
+            return doRequest(handle, params.getOutputMode());
+
+        } catch(IOException e) {
+            throw new AlchemyApiException(e);
+        }
+    }
+
+    private Document get(final String callName, final String callPrefix, final Parameters params) {
+        try {
+            final String urlQuery = "?apikey=" + configuration.getApiKey() + params.getUrlQuery();
+            final URL url = new URL(buildBaseApiUrl() + callPrefix + "/" + callName + urlQuery);
+
+            final HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+            httpURLConnection.setDoOutput(true);
+
+            return doRequest(httpURLConnection, params.getOutputMode());
+
+        } catch(IOException e) {
+            throw new AlchemyApiException(e);
+        }
+    }
+
+    private Document post(final String callName, final String callPrefix, final Parameters params) {
+        try {
+            final URL url = new URL(buildBaseApiUrl() + callPrefix + "/" + callName);
+            final String data = "apikey=" + configuration.getApiKey() + params.getUrlQuery();
+
+            final HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+            httpURLConnection.setDoOutput(true);
+            httpURLConnection.addRequestProperty("Content-Length", Integer.toString(data.length()));
+
+            final DataOutputStream outputStream = new DataOutputStream(httpURLConnection.getOutputStream());
+            outputStream.write(data.getBytes(Charset.forName("UTF-8")));
+            outputStream.close();
+
+            return doRequest(httpURLConnection, params.getOutputMode());
+
+        } catch(IOException e) {
+            throw new AlchemyApiException(e);
+        }
+    }
+
+    // TODO add json handling
     // TODO return pojo with parsed field, but allow a "raw" xml/json getter to protect against api updates
-    private Document doRequest(HttpURLConnection handle, String outputMode)
-        throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
-        DataInputStream istream = new DataInputStream(handle.getInputStream());
-        Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(istream);
+    private Document doRequest(final HttpURLConnection httpURLConnection, final String outputMode) {
+        try {
+            final DataInputStream inputStream = new DataInputStream(httpURLConnection.getInputStream());
+            final Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(inputStream);
 
-        istream.close();
-        handle.disconnect();
+            inputStream.close();
+            httpURLConnection.disconnect();
 
-        XPathFactory factory = XPathFactory.newInstance();
+            switch (outputMode) {
+                case Parameters.OUTPUT_XML:
+                    return parseXml(document);
 
-        if(Parameters.OUTPUT_XML.equals(outputMode)) {
-        	String statusStr = getNodeValue(factory, doc, "/results/status/text()");
-        	if (null == statusStr || !statusStr.equals("OK")) {
-        		String statusInfoStr = getNodeValue(factory, doc, "/results/statusInfo/text()");
-        		if (null != statusInfoStr && statusInfoStr.length() > 0)
-        			throw new IOException("Error making API call: " + statusInfoStr + '.');
+                case Parameters.OUTPUT_RDF:
+                    return praseRdf(document);
 
-        		throw new IOException("Error making API call: " + statusStr + '.');
-        	}
+                case Parameters.OUTPUT_JSON:
+                    throw new AlchemyApiException("Json Response not supported yet");
+            }
+            return document;
+
+        } catch (SAXException | ParserConfigurationException | IOException e) {
+            throw new AlchemyApiException(e);
         }
-        else if(Parameters.OUTPUT_RDF.equals(outputMode)) {
-        	String statusStr = getNodeValue(factory, doc, "//RDF/Description/ResultStatus/text()");
-        	if (null == statusStr || !statusStr.equals("OK")) {
-        		String statusInfoStr = getNodeValue(factory, doc, "//RDF/Description/ResultStatus/text()");
-        		if (null != statusInfoStr && statusInfoStr.length() > 0)
-        			throw new IOException("Error making API call: " + statusInfoStr + '.');
-
-        		throw new IOException("Error making API call: " + statusStr + '.');
-        	}
-        }
-
-        return doc;
     }
 
-    private String getNodeValue(XPathFactory factory, Document doc, String xpathStr)
-        throws XPathExpressionException
-    {
-        XPath xpath = factory.newXPath();
-        XPathExpression expr = xpath.compile(xpathStr);
-        Object result = expr.evaluate(doc, XPathConstants.NODESET);
-        NodeList results = (NodeList) result;
+    private Document parseXml(final Document document) {
+        final XPathFactory factory = XPathFactory.newInstance();
+        final String status = getNodeValue(factory, document, "/results/status/text()");
+        if (isBlank(status) || !status.equals("OK")) {
+            final String statusInfo = getNodeValue(factory, document, "/results/statusInfo/text()");
+            if (isNotBlank(statusInfo)) {
+                throw new AlchemyApiException("Error making API call: " + statusInfo);
+            }
+            throw new AlchemyApiException("Error making API call: " + status);
+        }
+        return document;
+    }
 
-        if (results.getLength() > 0 && null != results.item(0))
+    private Document praseRdf(final Document document) {
+        final XPathFactory factory = XPathFactory.newInstance();
+        final String status = getNodeValue(factory, document, "//RDF/Description/ResultStatus/text()");
+        if (isBlank(status) || !status.equals("OK")) {
+            final String statusInfo = getNodeValue(factory, document, "//RDF/Description/ResultStatus/text()");
+            if (isNotBlank(statusInfo)) {
+                throw new AlchemyApiException("Error making API call: " + statusInfo);
+            }
+            throw new AlchemyApiException("Error making API call: " + status);
+        }
+        return document;
+    }
+
+    private String getNodeValue(XPathFactory factory, Document doc, String xpathStr) {
+        try {
+            final XPath xpath = factory.newXPath();
+            final XPathExpression expr = xpath.compile(xpathStr);
+            final Object result = expr.evaluate(doc, XPathConstants.NODESET);
+            final NodeList results = (NodeList) result;
+
+            if(results.getLength() == 0 || results.item(0) == null) { return null; }
             return results.item(0).getNodeValue();
 
-        return null;
+        } catch (XPathExpressionException e) {
+            throw new AlchemyApiException(e);
+        }
     }
+
+    private String buildBaseApiUrl() {
+        return API_URL.replace("{SUB_DOMAIN}", configuration.getApiSubDomain());
+    }
+
 }

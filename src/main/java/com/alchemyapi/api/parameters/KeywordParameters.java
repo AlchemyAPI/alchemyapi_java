@@ -94,8 +94,8 @@ public class KeywordParameters extends Parameters {
         this.baseUrl = baseUrl;
     }
 
-    public String getParameterString() {
-        String retString = super.getParameterString();
+    public String getUrlQuery() {
+        String retString = super.getUrlQuery();
         try {
             if (sourceText != null) retString += "&sourceText=" + sourceText;
             if (showSourceText != null) retString += "&showSourceText=" + (showSourceText ? "1" : "0");

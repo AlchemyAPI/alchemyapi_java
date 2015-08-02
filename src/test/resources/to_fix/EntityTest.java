@@ -1,6 +1,6 @@
-package com.alchemyapi;
+package to_fix;
 
-import com.alchemyapi.api.AlchemyAPI;
+import com.alchemyapi.api.AlchemyApi;
 
 import org.xml.sax.SAXException;
 import org.w3c.dom.Document;
@@ -13,26 +13,29 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-class ConceptTest {
-    public static void main(String[] args) throws IOException, SAXException,
-            ParserConfigurationException, XPathExpressionException {
+class EntityTest {
+    public static void main(String[] args)
+        throws IOException, SAXException,
+               ParserConfigurationException, XPathExpressionException
+    {
         // Create an AlchemyAPI object.
-        AlchemyAPI alchemyObj = AlchemyAPI.GetInstanceFromFile("api_key.txt");
+        AlchemyApi alchemyObj = AlchemyApi.GetInstanceFromFile("api_key.txt");
 
-        // Extract concept tags for a web URL.
-        Document doc = alchemyObj.URLGetRankedConcepts("http://www.techcrunch.com/");
+        // Extract a ranked list of named entities for a web URL.
+        Document doc = alchemyObj.URLGetRankedNamedEntities("http://www.techcrunch.com/");
         System.out.println(getStringFromDocument(doc));
 
-        // Extract concept tags for a text string.
-        doc = alchemyObj.TextGetRankedConcepts(
-            "This thing has a steering wheel, tires, and an engine.  Do you know what it is?");
+        // Extract a ranked list of named entities from a text string.
+        doc = alchemyObj.TextGetRankedNamedEntities(
+            "Hello there, my name is Bob Jones.  I live in the United States of America.  " +
+            "Where do you live, Fred?");
         System.out.println(getStringFromDocument(doc));
 
         // Load a HTML document to analyze.
         String htmlDoc = getFileContents("data/example.html");
 
-        // Extract concept tags for a HTML document.
-        doc = alchemyObj.HTMLGetRankedConcepts(htmlDoc, "http://www.test.com/");
+        // Extract a ranked list of named entities from a HTML document.
+        doc = alchemyObj.HTMLGetRankedNamedEntities(htmlDoc, "http://www.test.com/");
         System.out.println(getStringFromDocument(doc));
     }
 

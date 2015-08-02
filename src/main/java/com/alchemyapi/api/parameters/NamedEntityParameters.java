@@ -116,8 +116,8 @@ public class NamedEntityParameters extends Parameters {
         this.sentiment = sentiment;
     }
 
-    public String getParameterString() {
-        String retString = super.getParameterString();
+    public String getUrlQuery() {
+        String retString = super.getUrlQuery();
         try {
             if (disambiguate != null) retString += "&disambiguate=" + (disambiguate ? "1" : "0");
             if (linkedData != null) retString += "&linkedData=" + (linkedData ? "1" : "0");

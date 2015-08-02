@@ -1,6 +1,6 @@
-package com.alchemyapi;
+package to_fix;
 
-import com.alchemyapi.api.AlchemyAPI;
+import com.alchemyapi.api.AlchemyApi;
 
 import org.xml.sax.SAXException;
 import org.w3c.dom.Document;
@@ -13,35 +13,29 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-class LanguageTest {
+class ConstraintQueryTest {
     public static void main(String[] args)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
         // Create an AlchemyAPI object.
-        AlchemyAPI alchemyObj = AlchemyAPI.GetInstanceFromFile("api_key.txt");
+        AlchemyApi alchemyObj = AlchemyApi.GetInstanceFromFile("api_key.txt");
 
-        // Detect the language for a web URL.
-        Document doc = alchemyObj.URLGetLanguage("http://news.google.fr/");
+        // Extract first link from an URL.
+        Document doc = alchemyObj.URLGetConstraintQuery("http://microformats.org/wiki/hcard",
+                "1st link");
         System.out.println(getStringFromDocument(doc));
 
-        // Detect the language for a text string (requires at least 100
-        // characters).
+        // Extract first link from a HTML.
         String htmlDoc = getFileContents("data/example.html");
-        doc = alchemyObj.TextGetLanguage("This is some english language text.  What language do you speak?");
-        System.out.println(getStringFromDocument(doc));
-
-        // Load a HTML document to analyze.
-        htmlDoc = getFileContents("data/example.html");
-
-        // Detect the language for a HTML document.
-        doc = alchemyObj.HTMLGetLanguage(htmlDoc, "http://www.test.com/");
+        doc = alchemyObj.HTMLGetConstraintQuery(htmlDoc, "http://www.test.com/", "1st link");
         System.out.println(getStringFromDocument(doc));
     }
 
     // utility function
-    private static String getFileContents(String filename) throws IOException,
-            FileNotFoundException {
+    private static String getFileContents(String filename)
+        throws IOException, FileNotFoundException
+    {
         File file = new File(filename);
         StringBuilder contents = new StringBuilder();
 

@@ -1,51 +1,41 @@
-package com.alchemyapi;
+package to_fix;
 
-import com.alchemyapi.api.AlchemyAPI;
-import com.alchemyapi.api.parameters.CategoryParameters;
-import com.alchemyapi.api.parameters.Parameters;
-import org.w3c.dom.Document;
+import com.alchemyapi.api.*;
+
 import org.xml.sax.SAXException;
-
+import org.w3c.dom.Document;
+import java.io.*;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathExpressionException;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import javax.xml.xpath.XPathExpressionException;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.StringWriter;
 
-class CategoryTest {
+class TaxonomyTest {
     public static void main(String[] args)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
         // Create an AlchemyAPI object.
-        AlchemyAPI alchemyObj = AlchemyAPI.GetInstanceFromFile("api_key.txt");
+        AlchemyApi alchemyObj = AlchemyApi.GetInstanceFromFile("api_key.txt");
 
-        // Categorize a web URL by topic.
-        Document doc = alchemyObj.URLGetCategory("http://www.techcrunch.com/");
+        // Extract a ranked list of relations for a web URL.
+        Document doc = alchemyObj.URLGetTaxonomy("http://www.techcrunch.com/");
         System.out.println(getStringFromDocument(doc));
 
-        // Categorize some text.
-        doc = alchemyObj.TextGetCategory("Latest on the War in Iraq.");
+        // Extract a ranked taxonomy from a text string.
+        doc = alchemyObj.TextGetTaxonomy(
+            "Hello there, my name is Bob Jones.  I live in the United States of America.  " +
+            "Where do you live, Fred?");
         System.out.println(getStringFromDocument(doc));
 
         // Load a HTML document to analyze.
         String htmlDoc = getFileContents("data/example.html");
 
-        // Categorize a HTML document by topic.
-        doc = alchemyObj.HTMLGetCategory(htmlDoc, "http://www.test.com/");
-        System.out.println(getStringFromDocument(doc));
-        
-        CategoryParameters categoryParameters = new CategoryParameters();
-        categoryParameters.setOutputMode(Parameters.OUTPUT_RDF);
-        doc = alchemyObj.HTMLGetCategory(htmlDoc, "http://www.test.com/", categoryParameters);
+        // Extract a ranked taxonomy from a HTML document.
+        doc = alchemyObj.HTMLGetTaxonomy(htmlDoc, "http://www.test.com/");
         System.out.println(getStringFromDocument(doc));
     }
 

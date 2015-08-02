@@ -17,8 +17,8 @@ public class ConstraintQueryParameters extends Parameters {
     }
 
 
-    public String getParameterString() {
-        String retString = super.getParameterString();
+    public String getUrlQuery() {
+        String retString = super.getUrlQuery();
         try {
             if (cQuery != null) retString += "&cquery=" + URLEncoder.encode(cQuery, "UTF-8");
         } catch (UnsupportedEncodingException e) {

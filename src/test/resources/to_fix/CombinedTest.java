@@ -1,40 +1,43 @@
-package com.alchemyapi;
+package to_fix;
 
-import com.alchemyapi.api.AlchemyAPI;
-import org.w3c.dom.Document;
+import com.alchemyapi.api.*;
+
+import com.alchemyapi.api.parameters.CombinedParameters;
 import org.xml.sax.SAXException;
-
+import org.w3c.dom.Document;
+import java.io.*;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathExpressionException;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import javax.xml.xpath.XPathExpressionException;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.StringWriter;
 
-public class MicroformatsTest {
+class CombinedTest {
     public static void main(String[] args)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
     {
         // Create an AlchemyAPI object.
-        AlchemyAPI alchemyObj = AlchemyAPI.GetInstanceFromFile("api_key.txt");
+        AlchemyApi alchemyObj = AlchemyApi.GetInstanceFromFile("api_key.txt");
 
-        // Extract microformats data from a web URL.
-        Document doc = alchemyObj.URLGetMicroformats("http://microformats.org/wiki/hcard");
+        // Extract combined data for a web URL.
+        Document doc = alchemyObj.URLGetCombined("http://www.techcrunch.com/");
         System.out.println(getStringFromDocument(doc));
 
-        // Load a HTML document to analyze.
-        String htmlDoc = getFileContents("data/microformats.html");
+        // Extract combined data from a text string.
+        doc = alchemyObj.TextGetCombined(
+            "Hello there, my name is Bob Jones.  I live in the United States of America.  " +
+            "Where do you live, Fred?");
+        System.out.println(getStringFromDocument(doc));
 
-        // Extract microformats data from a HTML document.
-        doc = alchemyObj.HTMLGetMicroformats(htmlDoc, "http://www.test.com/");
+	// Only extract entities & keywords
+	CombinedParameters combinedParams = new CombinedParameters();
+	combinedParams.setSentiment(true);
+	combinedParams.setExtract("entity");
+	combinedParams.setExtract("keyword");
+	doc = alchemyObj.TextGetCombined("Madonna enjoys tasty Pepsi.  I love her style.", combinedParams);
         System.out.println(getStringFromDocument(doc));
     }
 

@@ -1,4 +1,4 @@
-package com.alchemyapi;
+package to_fix;
 
 import com.alchemyapi.api.*;
 
@@ -20,7 +20,7 @@ class ParameterTest {
                ParserConfigurationException, XPathExpressionException
     {
         // Create an AlchemyAPI object.
-        AlchemyAPI alchemyObj = AlchemyAPI.GetInstanceFromFile("api_key.txt");
+        AlchemyApi alchemyObj = AlchemyApi.GetInstanceFromFile("api_key.txt");
 
         // Extract a ranked list of named entities for a web URL.  Turn off disambiguation
         NamedEntityParameters entityParams = new NamedEntityParameters();
