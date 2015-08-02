@@ -1,8 +1,8 @@
 package com.alchemyapi;
 
 import com.alchemyapi.api.AlchemyAPI;
-import com.alchemyapi.api.AlchemyAPI_CategoryParams;
-import com.alchemyapi.api.AlchemyAPI_Params;
+import com.alchemyapi.api.parameters.CategoryParameters;
+import com.alchemyapi.api.parameters.Parameters;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -43,9 +43,9 @@ class CategoryTest {
         doc = alchemyObj.HTMLGetCategory(htmlDoc, "http://www.test.com/");
         System.out.println(getStringFromDocument(doc));
         
-        AlchemyAPI_CategoryParams categoryParams = new AlchemyAPI_CategoryParams();
-        categoryParams.setOutputMode(AlchemyAPI_Params.OUTPUT_RDF);
-        doc = alchemyObj.HTMLGetCategory(htmlDoc, "http://www.test.com/", categoryParams);
+        CategoryParameters categoryParameters = new CategoryParameters();
+        categoryParameters.setOutputMode(Parameters.OUTPUT_RDF);
+        doc = alchemyObj.HTMLGetCategory(htmlDoc, "http://www.test.com/", categoryParameters);
         System.out.println(getStringFromDocument(doc));
     }
 

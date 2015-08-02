@@ -2,6 +2,7 @@ package com.alchemyapi.test;
 
 import com.alchemyapi.api.*;
 
+import com.alchemyapi.api.parameters.RelationParameters;
 import org.xml.sax.SAXException;
 import org.w3c.dom.Document;
 import java.io.*;
@@ -38,7 +39,7 @@ class RelationsTest {
         doc = alchemyObj.HTMLGetRelations(htmlDoc, "http://www.test.com/");
         System.out.println(getStringFromDocument(doc));
 		
-		AlchemyAPI_RelationParams relationParams = new AlchemyAPI_RelationParams();
+		RelationParameters relationParams = new RelationParameters();
 		relationParams.setSentiment(true);
 		relationParams.setEntities(true);
 		relationParams.setDisambiguate(true);

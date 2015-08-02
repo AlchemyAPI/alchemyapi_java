@@ -2,6 +2,7 @@ package com.alchemyapi;
 
 import com.alchemyapi.api.*;
 
+import com.alchemyapi.api.parameters.CombinedParameters;
 import org.xml.sax.SAXException;
 import org.w3c.dom.Document;
 import java.io.*;
@@ -32,7 +33,7 @@ class CombinedTest {
         System.out.println(getStringFromDocument(doc));
 
 	// Only extract entities & keywords
-	AlchemyAPI_CombinedParams combinedParams = new AlchemyAPI_CombinedParams();
+	CombinedParameters combinedParams = new CombinedParameters();
 	combinedParams.setSentiment(true);
 	combinedParams.setExtract("entity");
 	combinedParams.setExtract("keyword");

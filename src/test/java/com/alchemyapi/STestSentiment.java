@@ -1,9 +1,9 @@
 package com.alchemyapi;
 
 import com.alchemyapi.api.AlchemyAPI;
-import com.alchemyapi.api.AlchemyAPI_KeywordParams;
-import com.alchemyapi.api.AlchemyAPI_NamedEntityParams;
-import com.alchemyapi.api.AlchemyAPI_TargetedSentimentParams;
+import com.alchemyapi.api.parameters.KeywordParameters;
+import com.alchemyapi.api.parameters.NamedEntityParameters;
+import com.alchemyapi.api.parameters.TargetedSentimentParameters;
 import com.alchemyapi.util.DocumentUtils;
 import com.alchemyapi.util.ResourceUtils;
 import org.junit.Test;
@@ -40,17 +40,17 @@ public class STestSentiment {
 
     @Test
     public void entityTargetedSentimentText() throws SAXException, ParserConfigurationException, XPathExpressionException, IOException {
-        final AlchemyAPI_NamedEntityParams entityParams = new AlchemyAPI_NamedEntityParams();
+        final NamedEntityParameters entityParams = new NamedEntityParameters();
         entityParams.setSentiment(true);
         final Document document = alchemyAPI.TextGetRankedNamedEntities("That Mike Tyson is such a sweetheart.", entityParams);
         System.out.println(DocumentUtils.toString(document));
 
-        final AlchemyAPI_KeywordParams keywordParams = new AlchemyAPI_KeywordParams();
+        final KeywordParameters keywordParams = new KeywordParameters();
         keywordParams.setSentiment(true);
         final Document document2 = alchemyAPI.TextGetRankedKeywords("That Mike Tyson is such a sweetheart.", keywordParams);
         System.out.println(DocumentUtils.toString(document2));
 
-        final AlchemyAPI_TargetedSentimentParams sentimentParams = new AlchemyAPI_TargetedSentimentParams();
+        final TargetedSentimentParameters sentimentParams = new TargetedSentimentParameters();
         sentimentParams.setShowSourceText(true);
         final Document document3 = alchemyAPI.TextGetTargetedSentiment("This car is terrible.", "car", sentimentParams);
         System.out.print(DocumentUtils.toString(document3));
@@ -58,7 +58,7 @@ public class STestSentiment {
 
     @Test
     public void entityTargetedSentimentUrl() throws SAXException, ParserConfigurationException, XPathExpressionException, IOException {
-        final AlchemyAPI_TargetedSentimentParams sentimentParams = new AlchemyAPI_TargetedSentimentParams();
+        final TargetedSentimentParameters sentimentParams = new TargetedSentimentParameters();
         sentimentParams.setShowSourceText(true);
 
         final Document document = alchemyAPI.URLGetTargetedSentiment("http://techcrunch.com/2012/03/01/keen-on-anand-rajaraman-how-walmart-wants-to-leapfrog-over-amazon-tctv/", "Walmart", sentimentParams);
@@ -67,7 +67,7 @@ public class STestSentiment {
 
     @Test
     public void entityTargetedSentimentHtml() throws SAXException, ParserConfigurationException, XPathExpressionException, IOException {
-        final AlchemyAPI_TargetedSentimentParams sentimentParams = new AlchemyAPI_TargetedSentimentParams();
+        final TargetedSentimentParameters sentimentParams = new TargetedSentimentParameters();
         sentimentParams.setShowSourceText(true);
 
         final String html = ResourceUtils.toString("data/example.html");

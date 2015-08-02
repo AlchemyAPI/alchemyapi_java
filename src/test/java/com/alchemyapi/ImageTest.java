@@ -2,6 +2,7 @@ package com.alchemyapi;
 
 import com.alchemyapi.api.*;
 
+import com.alchemyapi.api.parameters.ImageParameters;
 import org.xml.sax.SAXException;
 import org.w3c.dom.Document;
 import java.io.*;
@@ -12,7 +13,6 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.net.URLEncoder;
 
 class ImageTest {
     public static void main(String[] args)
@@ -32,9 +32,9 @@ class ImageTest {
 
         byte[] imageByteArray = readFile("data/cat.jpg");
 
-        AlchemyAPI_ImageParams imageParams = new AlchemyAPI_ImageParams();
+        ImageParameters imageParams = new ImageParameters();
         imageParams.setImage(imageByteArray);
-        imageParams.setImagePostMode(AlchemyAPI_ImageParams.RAW);
+        imageParams.setImagePostMode(ImageParameters.RAW);
         doc = alchemyObj.ImageGetRankedImageKeywords(imageParams);
         System.out.println(getStringFromDocument(doc));
     }

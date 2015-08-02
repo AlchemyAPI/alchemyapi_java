@@ -2,6 +2,7 @@ package com.alchemyapi;
 
 import com.alchemyapi.api.*;
 
+import com.alchemyapi.api.parameters.NamedEntityParameters;
 import org.xml.sax.SAXException;
 import org.w3c.dom.Document;
 import java.io.*;
@@ -22,7 +23,7 @@ class ParameterTest {
         AlchemyAPI alchemyObj = AlchemyAPI.GetInstanceFromFile("api_key.txt");
 
         // Extract a ranked list of named entities for a web URL.  Turn off disambiguation
-        AlchemyAPI_NamedEntityParams entityParams = new AlchemyAPI_NamedEntityParams();
+        NamedEntityParameters entityParams = new NamedEntityParameters();
         entityParams.setDisambiguate(false);
 		entityParams.setSentiment(true);
         Document doc = alchemyObj.URLGetRankedNamedEntities("http://www.techcrunch.com/", entityParams);
