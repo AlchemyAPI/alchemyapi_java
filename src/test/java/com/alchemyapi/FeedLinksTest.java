@@ -1,6 +1,6 @@
-package com.alchemyapi.test;
+package com.alchemyapi;
 
-import com.alchemyapi.api.*;
+import com.alchemyapi.api.AlchemyAPI;
 
 import org.xml.sax.SAXException;
 import org.w3c.dom.Document;
@@ -13,7 +13,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-class CategoryTest {
+class FeedLinksTest {
     public static void main(String[] args)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
@@ -21,24 +21,15 @@ class CategoryTest {
         // Create an AlchemyAPI object.
         AlchemyAPI alchemyObj = AlchemyAPI.GetInstanceFromFile("api_key.txt");
 
-        // Categorize a web URL by topic.
-        Document doc = alchemyObj.URLGetCategory("http://www.techcrunch.com/");
-        System.out.println(getStringFromDocument(doc));
-
-        // Categorize some text.
-        doc = alchemyObj.TextGetCategory("Latest on the War in Iraq.");
+        // Extract RSS / ATOM feed links from a web URL.
+        Document doc = alchemyObj.URLGetFeedLinks("http://www.techcrunch.com/");
         System.out.println(getStringFromDocument(doc));
 
         // Load a HTML document to analyze.
         String htmlDoc = getFileContents("data/example.html");
 
-        // Categorize a HTML document by topic.
-        doc = alchemyObj.HTMLGetCategory(htmlDoc, "http://www.test.com/");
-        System.out.println(getStringFromDocument(doc));
-        
-        AlchemyAPI_CategoryParams categoryParams = new AlchemyAPI_CategoryParams();
-        categoryParams.setOutputMode(AlchemyAPI_Params.OUTPUT_RDF);
-        doc = alchemyObj.HTMLGetCategory(htmlDoc, "http://www.test.com/", categoryParams);
+        // Extract RSS / ATOM feed links from a HTML document.
+        doc = alchemyObj.HTMLGetFeedLinks(htmlDoc, "http://www.test.com/");
         System.out.println(getStringFromDocument(doc));
     }
 

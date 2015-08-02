@@ -1,4 +1,4 @@
-package com.alchemyapi.test;
+package com.alchemyapi;
 
 import com.alchemyapi.api.AlchemyAPI;
 
@@ -13,35 +13,34 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-class LanguageTest {
-    public static void main(String[] args)
-        throws IOException, SAXException,
-               ParserConfigurationException, XPathExpressionException
-    {
+class KeywordTest {
+    public static void main(String[] args) throws IOException, SAXException,
+            ParserConfigurationException, XPathExpressionException {
         // Create an AlchemyAPI object.
         AlchemyAPI alchemyObj = AlchemyAPI.GetInstanceFromFile("api_key.txt");
 
-        // Detect the language for a web URL.
-        Document doc = alchemyObj.URLGetLanguage("http://news.google.fr/");
+        // Extract topic keywords for a web URL.
+        Document doc = alchemyObj.URLGetRankedKeywords("http://www.techcrunch.com/");
         System.out.println(getStringFromDocument(doc));
 
-        // Detect the language for a text string (requires at least 100
-        // characters).
-        String htmlDoc = getFileContents("data/example.html");
-        doc = alchemyObj.TextGetLanguage("This is some english language text.  What language do you speak?");
+        // Extract topic keywords for a text string.
+        doc = alchemyObj.TextGetRankedKeywords(
+            "Hello there, my name is Bob Jones.  I live in the United States of America.  " +
+            "Where do you live, Fred?");
         System.out.println(getStringFromDocument(doc));
 
         // Load a HTML document to analyze.
-        htmlDoc = getFileContents("data/example.html");
+        String htmlDoc = getFileContents("data/example.html");
 
-        // Detect the language for a HTML document.
-        doc = alchemyObj.HTMLGetLanguage(htmlDoc, "http://www.test.com/");
+        // Extract topic keywords for a HTML document.
+        doc = alchemyObj.HTMLGetRankedKeywords(htmlDoc, "http://www.test.com/");
         System.out.println(getStringFromDocument(doc));
     }
 
     // utility function
-    private static String getFileContents(String filename) throws IOException,
-            FileNotFoundException {
+    private static String getFileContents(String filename)
+        throws IOException, FileNotFoundException
+    {
         File file = new File(filename);
         StringBuilder contents = new StringBuilder();
 

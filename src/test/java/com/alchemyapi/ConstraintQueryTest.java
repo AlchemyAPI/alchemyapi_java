@@ -1,4 +1,4 @@
-package com.alchemyapi.test;
+package com.alchemyapi;
 
 import com.alchemyapi.api.AlchemyAPI;
 
@@ -13,7 +13,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-class TextExtractTest {
+class ConstraintQueryTest {
     public static void main(String[] args)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
@@ -21,35 +21,14 @@ class TextExtractTest {
         // Create an AlchemyAPI object.
         AlchemyAPI alchemyObj = AlchemyAPI.GetInstanceFromFile("api_key.txt");
 
-        // Extract page text from a web URL. (ignoring ads, navigation links,
-        // and other content).
-        Document doc = alchemyObj.URLGetText("http://www.techcrunch.com/");
+        // Extract first link from an URL.
+        Document doc = alchemyObj.URLGetConstraintQuery("http://microformats.org/wiki/hcard",
+                "1st link");
         System.out.println(getStringFromDocument(doc));
 
-        // Extract raw page text from a web URL. (including ads, navigation
-        // links, and other content).
-        doc = alchemyObj.URLGetRawText("http://www.techcrunch.com/");
-        System.out.println(getStringFromDocument(doc));
-
-        // Extract a title from a web URL.
-        doc = alchemyObj.URLGetTitle("http://www.techcrunch.com/");
-        System.out.println(getStringFromDocument(doc));
-
-        // Load a HTML document to analyze.
+        // Extract first link from a HTML.
         String htmlDoc = getFileContents("data/example.html");
-
-        // Extract page text from a HTML document. (ignoring ads, navigation
-        // links, and other content).
-        doc = alchemyObj.HTMLGetText(htmlDoc, "http://www.test.com/");
-        System.out.println(getStringFromDocument(doc));
-
-        // Extract raw page text from a HTML document. (including ads,
-        // navigation links, and other content).
-        doc = alchemyObj.HTMLGetRawText(htmlDoc, "http://www.test.com/");
-        System.out.println(getStringFromDocument(doc));
-
-        // Extract a title from a HTML document.
-        doc = alchemyObj.HTMLGetTitle(htmlDoc, "http://www.test.com/");
+        doc = alchemyObj.HTMLGetConstraintQuery(htmlDoc, "http://www.test.com/", "1st link");
         System.out.println(getStringFromDocument(doc));
     }
 

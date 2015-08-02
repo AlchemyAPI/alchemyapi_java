@@ -1,11 +1,10 @@
-package com.alchemyapi.test;
+package com.alchemyapi;
 
 import com.alchemyapi.api.*;
 
 import org.xml.sax.SAXException;
 import org.w3c.dom.Document;
 import java.io.*;
-
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.transform.Transformer;
@@ -14,27 +13,34 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-public class AuthorTest {
-	
+class CombinedTest {
+    public static void main(String[] args)
+        throws IOException, SAXException,
+               ParserConfigurationException, XPathExpressionException
+    {
+        // Create an AlchemyAPI object.
+        AlchemyAPI alchemyObj = AlchemyAPI.GetInstanceFromFile("api_key.txt");
 
-	public static void main(String[] args)
-	        throws IOException, SAXException,
-	               ParserConfigurationException, XPathExpressionException
-	{
-		// Create an AlchemyAPI object.
-		AlchemyAPI alchemyObj = AlchemyAPI.GetInstanceFromFile("api_key.txt");
-	        
-		// Load a HTML document to analyze.
-		String htmlDoc = getFileContents("data/example.html");
-	        
-		Document doc = alchemyObj.URLGetAuthor("http://www.politico.com/blogs/media/2012/02/detroit-news-ed-upset-over-romney-edit-115247.html");
-		System.out.println(getStringFromDocument(doc));
-	        
-		doc = alchemyObj.HTMLGetAuthor(htmlDoc, "http://www.test.com/");
-		System.out.println(getStringFromDocument(doc));
-	}
-	
-	 // utility function
+        // Extract combined data for a web URL.
+        Document doc = alchemyObj.URLGetCombined("http://www.techcrunch.com/");
+        System.out.println(getStringFromDocument(doc));
+
+        // Extract combined data from a text string.
+        doc = alchemyObj.TextGetCombined(
+            "Hello there, my name is Bob Jones.  I live in the United States of America.  " +
+            "Where do you live, Fred?");
+        System.out.println(getStringFromDocument(doc));
+
+	// Only extract entities & keywords
+	AlchemyAPI_CombinedParams combinedParams = new AlchemyAPI_CombinedParams();
+	combinedParams.setSentiment(true);
+	combinedParams.setExtract("entity");
+	combinedParams.setExtract("keyword");
+	doc = alchemyObj.TextGetCombined("Madonna enjoys tasty Pepsi.  I love her style.", combinedParams);
+        System.out.println(getStringFromDocument(doc));
+    }
+
+    // utility function
     private static String getFileContents(String filename)
         throws IOException, FileNotFoundException
     {
@@ -56,8 +62,8 @@ public class AuthorTest {
 
         return contents.toString();
     }
-	
-	   // utility method
+
+    // utility method
     private static String getStringFromDocument(Document doc) {
         try {
             DOMSource domSource = new DOMSource(doc);
@@ -73,9 +79,5 @@ public class AuthorTest {
             ex.printStackTrace();
             return null;
         }
-    }	
-    
-
-	
-
+    }
 }

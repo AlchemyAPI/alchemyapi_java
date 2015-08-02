@@ -1,4 +1,4 @@
-package com.alchemyapi.test;
+package com.alchemyapi;
 
 import com.alchemyapi.api.AlchemyAPI;
 
@@ -13,33 +13,35 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-class ConceptTest {
-    public static void main(String[] args) throws IOException, SAXException,
-            ParserConfigurationException, XPathExpressionException {
+class LanguageTest {
+    public static void main(String[] args)
+        throws IOException, SAXException,
+               ParserConfigurationException, XPathExpressionException
+    {
         // Create an AlchemyAPI object.
         AlchemyAPI alchemyObj = AlchemyAPI.GetInstanceFromFile("api_key.txt");
 
-        // Extract concept tags for a web URL.
-        Document doc = alchemyObj.URLGetRankedConcepts("http://www.techcrunch.com/");
+        // Detect the language for a web URL.
+        Document doc = alchemyObj.URLGetLanguage("http://news.google.fr/");
         System.out.println(getStringFromDocument(doc));
 
-        // Extract concept tags for a text string.
-        doc = alchemyObj.TextGetRankedConcepts(
-            "This thing has a steering wheel, tires, and an engine.  Do you know what it is?");
+        // Detect the language for a text string (requires at least 100
+        // characters).
+        String htmlDoc = getFileContents("data/example.html");
+        doc = alchemyObj.TextGetLanguage("This is some english language text.  What language do you speak?");
         System.out.println(getStringFromDocument(doc));
 
         // Load a HTML document to analyze.
-        String htmlDoc = getFileContents("data/example.html");
+        htmlDoc = getFileContents("data/example.html");
 
-        // Extract concept tags for a HTML document.
-        doc = alchemyObj.HTMLGetRankedConcepts(htmlDoc, "http://www.test.com/");
+        // Detect the language for a HTML document.
+        doc = alchemyObj.HTMLGetLanguage(htmlDoc, "http://www.test.com/");
         System.out.println(getStringFromDocument(doc));
     }
 
     // utility function
-    private static String getFileContents(String filename)
-        throws IOException, FileNotFoundException
-    {
+    private static String getFileContents(String filename) throws IOException,
+            FileNotFoundException {
         File file = new File(filename);
         StringBuilder contents = new StringBuilder();
 

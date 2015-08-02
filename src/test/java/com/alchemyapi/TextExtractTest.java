@@ -1,4 +1,4 @@
-package com.alchemyapi.test;
+package com.alchemyapi;
 
 import com.alchemyapi.api.AlchemyAPI;
 
@@ -13,7 +13,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-class MicroformatsTest {
+class TextExtractTest {
     public static void main(String[] args)
         throws IOException, SAXException,
                ParserConfigurationException, XPathExpressionException
@@ -21,15 +21,35 @@ class MicroformatsTest {
         // Create an AlchemyAPI object.
         AlchemyAPI alchemyObj = AlchemyAPI.GetInstanceFromFile("api_key.txt");
 
-        // Extract microformats data from a web URL.
-        Document doc = alchemyObj.URLGetMicroformats("http://microformats.org/wiki/hcard");
+        // Extract page text from a web URL. (ignoring ads, navigation links,
+        // and other content).
+        Document doc = alchemyObj.URLGetText("http://www.techcrunch.com/");
+        System.out.println(getStringFromDocument(doc));
+
+        // Extract raw page text from a web URL. (including ads, navigation
+        // links, and other content).
+        doc = alchemyObj.URLGetRawText("http://www.techcrunch.com/");
+        System.out.println(getStringFromDocument(doc));
+
+        // Extract a title from a web URL.
+        doc = alchemyObj.URLGetTitle("http://www.techcrunch.com/");
         System.out.println(getStringFromDocument(doc));
 
         // Load a HTML document to analyze.
-        String htmlDoc = getFileContents("data/microformats.html");
+        String htmlDoc = getFileContents("data/example.html");
 
-        // Extract microformats data from a HTML document.
-        doc = alchemyObj.HTMLGetMicroformats(htmlDoc, "http://www.test.com/");
+        // Extract page text from a HTML document. (ignoring ads, navigation
+        // links, and other content).
+        doc = alchemyObj.HTMLGetText(htmlDoc, "http://www.test.com/");
+        System.out.println(getStringFromDocument(doc));
+
+        // Extract raw page text from a HTML document. (including ads,
+        // navigation links, and other content).
+        doc = alchemyObj.HTMLGetRawText(htmlDoc, "http://www.test.com/");
+        System.out.println(getStringFromDocument(doc));
+
+        // Extract a title from a HTML document.
+        doc = alchemyObj.HTMLGetTitle(htmlDoc, "http://www.test.com/");
         System.out.println(getStringFromDocument(doc));
     }
 
