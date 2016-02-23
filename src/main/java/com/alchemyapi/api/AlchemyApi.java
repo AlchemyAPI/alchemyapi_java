@@ -1,19 +1,7 @@
 package com.alchemyapi.api;
 
 import com.alchemyapi.api.exceptions.AlchemyApiException;
-import com.alchemyapi.api.parameters.CategoryParameters;
-import com.alchemyapi.api.parameters.CombinedParameters;
-import com.alchemyapi.api.parameters.ConceptParameters;
-import com.alchemyapi.api.parameters.ConstraintQueryParameters;
-import com.alchemyapi.api.parameters.ImageParameters;
-import com.alchemyapi.api.parameters.KeywordParameters;
-import com.alchemyapi.api.parameters.LanguageParameters;
-import com.alchemyapi.api.parameters.NamedEntityParameters;
-import com.alchemyapi.api.parameters.Parameters;
-import com.alchemyapi.api.parameters.RelationParameters;
-import com.alchemyapi.api.parameters.TargetedSentimentParameters;
-import com.alchemyapi.api.parameters.TaxonomyParameters;
-import com.alchemyapi.api.parameters.TextParameters;
+import com.alchemyapi.api.parameters.*;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -71,6 +59,33 @@ public class AlchemyApi {
         params.setHtml(html);
         params.setUrl(url);
         return post("HTMLGetAuthor", "html", params);
+    }
+    public Document urlGetEmotion(final String url) {
+        return urlGetEmotion(url, new EmotionParameters());
+    }
+
+    public Document urlGetEmotion(final String url, final EmotionParameters params) {
+        params.setUrl(url);
+        return get("URLGetEmotion", "url", params);
+    }
+
+    public Document htmlGetEmotion(final String html, final String url) {
+        return htmlGetEmotion(html, url, new EmotionParameters());
+    }
+
+    public Document htmlGetEmotion(final String html, final String url, final EmotionParameters params) {
+        params.setUrl(url);
+        params.setHtml(html);
+        return post("HTMLGetEmotion", "html", params);
+    }
+
+    public Document textGetEmotion(final String text) {
+        return textGetEmotion(text, new EmotionParameters());
+    }
+
+    public Document textGetEmotion(final String text, final EmotionParameters params) {
+        params.setText(text);
+        return post("TextGetEmotion", "text", params);
     }
 
     public Document urlGetRankedNamedEntities(final String url) {
