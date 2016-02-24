@@ -13,6 +13,7 @@ public class CombinedParameters extends Parameters {
     public static final String EXTRACT_MODE_TRUST = "trust-metadata";
     public static final String EXTRACT_MODE_INFER = "always-infer";
     public static final String EXTRACT_PAGE_IMAGE = "page-image";
+    public static final String EXTRACT_EMOTION = "emotion";
     public static final String EXTRACT_ENTITY = "entity";
     public static final String EXTRACT_KEYWORD = "keyword";
     public static final String EXTRACT_TITLE = "title";
@@ -144,6 +145,7 @@ public class CombinedParameters extends Parameters {
 
     public void setExtract(String extractArg) {
         if (!extractArg.equals(EXTRACT_PAGE_IMAGE)
+                && !extractArg.equals(EXTRACT_EMOTION)
                 && !extractArg.equals(EXTRACT_ENTITY)
                 && !extractArg.equals(EXTRACT_KEYWORD)
                 && !extractArg.equals(EXTRACT_TITLE)
